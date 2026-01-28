@@ -1,1 +1,11 @@
-/.lake
+## Lean / Lake
+/.lake/
+
+## OS junk
+.DS_Store
+
+## leanblueprint (compiled/generated artifacts)
+/blueprint/lean_decls
+/blueprint/print/
+/blueprint/web/
+/blueprint/src/*.paux

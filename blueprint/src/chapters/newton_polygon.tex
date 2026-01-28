@@ -1,0 +1,487 @@
+\section{Preliminaries}
+
+\subsection{Non-archimedean valued fields and formal power series}
+
+\begin{definition}[Non-archimedean valuation]
+  \label{def:nonarch_valuation}
+  \lean{GhostConjecture.nonarch_valuation}
+  \leanok
+  \uses{}
+  A \emph{non-archimedean valuation} on a field $K$ is a map
+  \[
+    v : K \to \mathbb{R}\cup\{\infty\}
+  \]
+  such that for all $x,y\in K$:
+  \begin{itemize}
+    \item $v(0)=\infty$ and $v(1)=0$;
+    \item $v(xy)=v(x)+v(y)$;
+    \item $v(x+y)\ge \min\{v(x),v(y)\}$ (ultrametric inequality).
+  \end{itemize}
+  We call $(K,v)$ a \emph{non-archimedean valued field}.
+\end{definition}
+
+\begin{definition}[$p$-adic valuation on $\mathbb{Q}_p$]
+  \label{def:vp_Qp}
+  \lean{GhostConjecture.vp_Qp}
+  \leanok
+  \uses{def:nonarch_valuation}
+  Fix a prime $p$. On $K=\mathbb{Q}_p$, we write $v_p$ for the standard $p$-adic valuation,
+  normalized by $v_p(p)=1$ and $v_p(0)=\infty$.
+\end{definition}
+
+\begin{definition}[Formal power series ring]
+  \label{def:fps_ring}
+  \lean{GhostConjecture.formal_power_series_ring}
+  \leanok
+  \uses{}
+  For a commutative ring $R$, let $R\llbracket t\rrbracket$ denote the ring of formal power series
+  \[
+    F(t)=\sum_{n\ge 0} a_n t^n,\qquad a_n\in R,
+  \]
+  with the usual Cauchy product:
+  \[
+    (FG)(t)=\sum_{n\ge 0}\Big(\sum_{i=0}^n a_i b_{n-i}\Big)t^n.
+  \]
+\end{definition}
+
+\begin{lemma}[Coefficient formula for products]
+  \label{lem:coeff_mul}
+  \lean{GhostConjecture.coeff_mul}
+  \leanok
+  \uses{def:fps_ring}
+  If $F(t)=\sum_{n\ge 0} f_n t^n$ and $G(t)=\sum_{n\ge 0} g_n t^n$ in $K\llbracket t\rrbracket$, then
+  the coefficient of $t^n$ in $FG$ is
+  \[
+    (FG)_n = \sum_{i=0}^n f_i g_{n-i}.
+  \]
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:fps_ring}
+  This is the definition of Cauchy product in $K\llbracket t\rrbracket$.
+\end{proof}
+
+\begin{lemma}[Valuation lower bound on convolution coefficients]
+  \label{lem:vp_coeff_mul_lower_bound}
+  \lean{GhostConjecture.valuation_coeff_mul_lower_bound}
+  \leanok
+  \uses{def:nonarch_valuation, lem:coeff_mul}
+  Let $(K,v)$ be a non-archimedean valued field and $F,G\in K\llbracket t\rrbracket$.
+  Then for all $n\ge 0$,
+  \[
+    v\big((FG)_n\big)\ \ge\ \min_{0\le i\le n}\big(v(f_i)+v(g_{n-i})\big).
+  \]
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:nonarch_valuation, lem:coeff_mul}
+  By \Cref{lem:coeff_mul}, $(FG)_n=\sum_{i=0}^n f_i g_{n-i}$.
+  Apply the ultrametric inequality iteratively:
+  \[
+    v\Big(\sum_{i=0}^n f_i g_{n-i}\Big)\ \ge\ \min_i v(f_i g_{n-i})
+    \ =\ \min_i \big(v(f_i)+v(g_{n-i})\big).
+  \]
+\end{proof}
+
+\subsection{Convex-geometric preliminaries}
+
+\begin{definition}[Minkowski sum]
+  \label{def:minkowski_sum}
+  \lean{GhostConjecture.minkowski_sum}
+  \leanok
+  \uses{}
+  For subsets $A,B\subset \mathbb{R}^2$, define their \emph{Minkowski sum} by
+  \[
+    A+B := \{a+b \mid a\in A,\ b\in B\}.
+  \]
+\end{definition}
+
+\begin{definition}[Lower convex hull]
+  \label{def:lower_convex_hull}
+  \lean{GhostConjecture.lower_convex_hull}
+  \leanok
+  \uses{}
+  Let $S\subset \mathbb{R}^2$.
+  The \emph{lower convex hull} $\operatorname{LCH}(S)$ is the intersection of all closed convex sets
+  $C\subset\mathbb{R}^2$ such that:
+  \begin{itemize}
+    \item $S\subset C$;
+    \item $C$ is \emph{downward closed in the vertical direction}, i.e.\ if $(x,y)\in C$ and $y'\ge y$ then $(x,y')\in C$.
+  \end{itemize}
+  Equivalently, $\operatorname{LCH}(S)$ is the closed convex hull of $S$ together with all vertical rays
+  $\{(x,y')\mid y'\ge y\}$ above points $(x,y)\in S$.
+\end{definition}
+
+\begin{lemma}[Basic properties of Minkowski sums and lower hulls]
+  \label{lem:lch_minkowski_basic}
+  \lean{GhostConjecture.lower_convex_hull_minkowski_basic}
+  \leanok
+  \uses{def:minkowski_sum, def:lower_convex_hull}
+  Let $A,B\subset\mathbb{R}^2$.
+  \begin{enumerate}
+    \item If $A\subset A'$ and $B\subset B'$, then $A+B\subset A'+B'$.
+    \item If $C,D$ are closed and convex, then $C+D$ is closed and convex.
+    \item If $C,D$ are vertically downward closed, then $C+D$ is vertically downward closed.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:minkowski_sum, def:lower_convex_hull}
+  (1) is immediate from the definition of $+$.
+  (2) and (3) are standard: convexity and closedness follow from continuity of addition on $\mathbb{R}^2$ and
+  convexity of preimages; downward closure is preserved because increasing the $y$-coordinate in either summand
+  increases the $y$-coordinate of the sum.
+\end{proof}
+
+\section{The Newton Polygon}
+
+\subsection{Definition via lower convex hull}
+
+\begin{definition}[Newton points of a power series]
+  \label{def:newton_points}
+  \lean{GhostConjecture.newton_points}
+  \leanok
+  \uses{def:nonarch_valuation, def:fps_ring}
+  Let $(K,v)$ be a non-archimedean valued field and $F(t)=\sum_{n\ge 0} f_n t^n\in K\llbracket t\rrbracket$.
+  Define the set of \emph{Newton points} of $F$ by
+  \[
+    \mathcal{P}(F) := \{(n, v(f_n)) \in \mathbb{R}^2 \mid n\in\mathbb{Z}_{\ge 0},\ f_n\neq 0\}.
+  \]
+  (Coefficients $f_n=0$ are omitted, since $v(0)=\infty$.)
+\end{definition}
+
+\begin{definition}[Newton polygon]
+  \label{def:newton_polygon}
+  \lean{GhostConjecture.newton_polygon}
+  \leanok
+  \uses{def:newton_points, def:lower_convex_hull}
+  Let $(K,v)$ be a non-archimedean valued field and $F\in K\llbracket t\rrbracket$.
+  The \emph{Newton polygon} of $F$, denoted $\mathrm{NP}(F)$, is the lower convex hull
+  \[
+    \mathrm{NP}(F) := \operatorname{LCH}\big(\mathcal{P}(F)\big)\ \subset\ \mathbb{R}^2.
+  \]
+\end{definition}
+
+\begin{lemma}[Newton polygon of the zero series]
+  \label{lem:newton_polygon_zero}
+  \lean{GhostConjecture.newton_polygon_zero}
+  \leanok
+  \uses{def:newton_polygon, def:newton_points}
+  If $F=0$ in $K\llbracket t\rrbracket$, then $\mathcal{P}(F)=\varnothing$ and hence $\mathrm{NP}(F)=\operatorname{LCH}(\varnothing)$.
+  In particular, $\mathrm{NP}(0)$ is the minimal closed convex vertically downward closed subset of $\mathbb{R}^2$
+  (often taken to be $\varnothing$, depending on the chosen convention for $\operatorname{LCH}(\varnothing)$).
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:newton_polygon, def:newton_points}
+  Immediate from the definition: all coefficients vanish so there are no Newton points.
+  The second statement is just unpacking $\operatorname{LCH}$.
+\end{proof}
+
+\subsection{Basic formal properties}
+
+\begin{lemma}[Horizontal shift by multiplication by $t^k$]
+  \label{lem:newton_polygon_tpow}
+  \lean{GhostConjecture.newton_polygon_tpow}
+  \leanok
+  \uses{def:newton_polygon, def:newton_points}
+  Let $F\in K\llbracket t\rrbracket$ and $k\in\mathbb{Z}_{\ge 0}$.
+  Then
+  \[
+    \mathrm{NP}(t^k F)=\mathrm{NP}(F) + \{(k,0)\}.
+  \]
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:newton_polygon, def:newton_points, def:minkowski_sum}
+  The coefficients of $t^kF$ satisfy $(t^kF)_n=f_{n-k}$ for $n\ge k$ and $0$ otherwise.
+  Hence $\mathcal{P}(t^kF)=\mathcal{P}(F)+\{(k,0)\}$ at the level of point sets.
+  Taking $\operatorname{LCH}$ and using that translation commutes with convex hull and vertical closure yields the claim.
+\end{proof}
+
+\begin{lemma}[Vertical shift by multiplication by a scalar]
+  \label{lem:newton_polygon_smul}
+  \lean{GhostConjecture.newton_polygon_smul}
+  \leanok
+  \uses{def:nonarch_valuation, def:newton_polygon}
+  Let $c\in K$ and $F\in K\llbracket t\rrbracket$.
+  If $c\neq 0$ then
+  \[
+    \mathrm{NP}(cF)=\mathrm{NP}(F)+\{(0,v(c))\}.
+  \]
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:nonarch_valuation, def:newton_points, def:newton_polygon, def:minkowski_sum}
+  For each $n$, $(cF)_n=c f_n$ so $v((cF)_n)=v(c)+v(f_n)$ whenever $f_n\neq 0$.
+  Thus $\mathcal{P}(cF)=\mathcal{P}(F)+\{(0,v(c))\}$, and again $\operatorname{LCH}$ is compatible with translation.
+\end{proof}
+
+\begin{lemma}[Monotonicity under coefficientwise valuation bounds]
+  \label{lem:newton_polygon_monotone}
+  \lean{GhostConjecture.newton_polygon_monotone}
+  \leanok
+  \uses{def:newton_polygon, def:newton_points}
+  Let $F(t)=\sum f_n t^n$ and $G(t)=\sum g_n t^n$ in $K\llbracket t\rrbracket$.
+  Suppose that for all $n$ with $f_n\neq 0$ and $g_n\neq 0$ we have $v(g_n)\ge v(f_n)$.
+  Then $\mathrm{NP}(G)\subseteq \mathrm{NP}(F)$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:newton_points, def:newton_polygon, def:lower_convex_hull}
+  The hypothesis means every Newton point $(n,v(g_n))$ lies on or above $(n,v(f_n))$ at the same $x$-coordinate.
+  Since $\mathrm{NP}(F)$ is vertically downward closed and contains $\mathcal{P}(F)$, it contains $\mathcal{P}(G)$.
+  Minimality of $\operatorname{LCH}$ gives $\mathrm{NP}(G)=\operatorname{LCH}(\mathcal{P}(G))\subseteq \operatorname{LCH}(\mathcal{P}(F))=\mathrm{NP}(F)$.
+\end{proof}
+
+\section{The Product Formula}
+
+\subsection{Support functions and “tropical norms”}
+
+\begin{definition}[Support functional for lower convex sets]
+  \label{def:support_function_lower}
+  \lean{GhostConjecture.support_function_lower}
+  \leanok
+  \uses{}
+  For $C\subset\mathbb{R}^2$ and $\lambda\in\mathbb{R}$ define
+  \[
+    h_C(\lambda) := \inf_{(x,y)\in C}\ (y+\lambda x)\ \in\ \mathbb{R}\cup\{-\infty,\infty\}.
+  \]
+  When $C$ is closed, convex, and vertically downward closed, the family $\{h_C(\lambda)\}_{\lambda\in\mathbb{R}}$
+  encodes the lower boundary of $C$.
+\end{definition}
+
+\begin{lemma}[Support function of a Minkowski sum]
+  \label{lem:support_minkowski}
+  \lean{GhostConjecture.support_minkowski}
+  \leanok
+  \uses{def:support_function_lower, def:minkowski_sum}
+  For $A,B\subset\mathbb{R}^2$ and $\lambda\in\mathbb{R}$,
+  \[
+    h_{A+B}(\lambda)=h_A(\lambda)+h_B(\lambda),
+  \]
+  with the usual conventions for extended real addition.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:support_function_lower, def:minkowski_sum}
+  By definition,
+  \[
+    h_{A+B}(\lambda)=\inf_{a\in A,\ b\in B}\big((a_y+b_y)+\lambda(a_x+b_x)\big)
+    =\inf_{a\in A,\ b\in B}\big((a_y+\lambda a_x)+(b_y+\lambda b_x)\big)
+    =h_A(\lambda)+h_B(\lambda).
+  \]
+\end{proof}
+
+\begin{definition}[Tropical weight of a power series]
+  \label{def:tropical_weight}
+  \lean{GhostConjecture.tropical_weight}
+  \leanok
+  \uses{def:nonarch_valuation, def:fps_ring}
+  Let $(K,v)$ be non-archimedean and $F(t)=\sum_{n\ge 0} f_n t^n\in K\llbracket t\rrbracket$.
+  For $\lambda\in\mathbb{R}$ define the \emph{tropical weight}
+  \[
+    w_F(\lambda) := \inf_{n\ge 0}\ \big(v(f_n)+\lambda n\big)\ \in\ \mathbb{R}\cup\{-\infty,\infty\}.
+  \]
+\end{definition}
+
+\begin{lemma}[Support function of the Newton polygon]
+  \label{lem:support_newton_polygon}
+  \lean{GhostConjecture.support_newton_polygon}
+  \leanok
+  \uses{def:newton_polygon, def:support_function_lower, def:tropical_weight}
+  For $F\in K\llbracket t\rrbracket$ and $\lambda\in\mathbb{R}$,
+  \[
+    h_{\mathrm{NP}(F)}(\lambda)\ =\ w_F(\lambda).
+  \]
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:newton_polygon, def:newton_points, def:lower_convex_hull, def:support_function_lower, def:tropical_weight}
+  By definition, $\mathrm{NP}(F)$ is the smallest closed convex vertically downward closed set containing $\mathcal{P}(F)$.
+  The functional $(x,y)\mapsto y+\lambda x$ is affine and hence attains its infimum over a closed convex hull
+  at extreme points; vertical downward closure does not change the infimum because increasing $y$ increases $y+\lambda x$.
+  Therefore,
+  \[
+    h_{\mathrm{NP}(F)}(\lambda)=\inf_{(n,v(f_n))\in\mathcal{P}(F)}\big(v(f_n)+\lambda n\big)
+    =\inf_{n\ge 0}\big(v(f_n)+\lambda n\big)=w_F(\lambda).
+  \]
+  (Here coefficients $f_n=0$ contribute $v(f_n)=\infty$ and do not affect the infimum.)
+\end{proof}
+
+\subsection{Key technical lemma: multiplicativity of tropical weights}
+
+\begin{lemma}[Tropical weight is multiplicative]
+  \label{lem:tropical_weight_mul}
+  \lean{GhostConjecture.tropical_weight_mul}
+  \leanok
+  \uses{def:tropical_weight, lem:vp_coeff_mul_lower_bound}
+  Let $(K,v)$ be a non-archimedean valued field and $F,G\in K\llbracket t\rrbracket$.
+  Then for all $\lambda\in\mathbb{R}$,
+  \[
+    w_{FG}(\lambda)\ =\ w_F(\lambda)\ +\ w_G(\lambda).
+  \]
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  \uses{def:tropical_weight, lem:vp_coeff_mul_lower_bound}
+  We split into two inequalities.
+
+  \emph{(1) $\ge$ inequality.}
+  For each $n$,
+  \[
+    v((FG)_n)\ \ge\ \min_{i}\big(v(f_i)+v(g_{n-i})\big)
+  \]
+  by \Cref{lem:vp_coeff_mul_lower_bound}. Add $\lambda n$ and use $n=i+(n-i)$:
+  \[
+    v((FG)_n)+\lambda n\ \ge\ \min_i \big((v(f_i)+\lambda i)+(v(g_{n-i})+\lambda(n-i))\big)
+    \ \ge\ w_F(\lambda)+w_G(\lambda).
+  \]
+  Taking $\inf_n$ gives $w_{FG}(\lambda)\ge w_F(\lambda)+w_G(\lambda)$.
+
+  \emph{(2) $\le$ inequality.}
+  This is the only subtle step for formalization: cancellation in $(FG)_n=\sum_i f_i g_{n-i}$ can raise valuations.
+  To obtain equality at the level of the \emph{infimum over all $n$}, one uses a Gauss-type non-archimedean seminorm:
+  set $\|\sum a_n t^n\|_\lambda := \sup_n \exp(-(v(a_n)+\lambda n))$ (equivalently, $w_F(\lambda)=-\log \|F\|_\lambda$).
+  In standard non-archimedean analysis, this seminorm is multiplicative on $K\llbracket t\rrbracket$ (or on the relevant
+  subring where it is finite), so $\|FG\|_\lambda=\|F\|_\lambda\|G\|_\lambda$, hence $w_{FG}(\lambda)=w_F(\lambda)+w_G(\lambda)$.
+
+  \emph{Lean planning note (mathematical content).}
+  One can formalize multiplicativity in either of two equivalent ways:
+  \begin{itemize}
+    \item (Norm route) Introduce the seminorm $\|\cdot\|_\lambda$ as a “Gauss norm at weight $\lambda$” and prove
+      $\|FG\|_\lambda=\|F\|_\lambda\|G\|_\lambda$ using the ultrametric inequality and the fact that $\sup$ is compatible
+      with Cauchy products in the non-archimedean setting.
+    \item (Convex-analytic route) Work with the min-plus convolution
+      \[
+        (u\star v)(n)=\inf_{i+j=n}(u(i)+v(j)),\qquad u(n):=v(f_n),\ v(n):=v(g_n),
+      \]
+      observe $v((FG)_n)\ge (u\star v)(n)$, and show that passing to the lower convex envelope
+      (Legendre--Fenchel biconjugate) turns this inequality into an equality of support functions, yielding the desired $\le$.
+  \end{itemize}
+  Either route gives the required $\le$ inequality for $w$.
+\end{proof}
+
+\subsection{Main theorem: Newton polygon of a product is a Minkowski sum}
+
+\begin{theorem}[Newton polygon of a product]
+  \label{thm:newton_polygon_mul}
+  \lean{GhostConjecture.newton_polygon_mul}
+  \leanok
+  \uses{def:newton_polygon, def:minkowski_sum, lem:support_newton_polygon, lem:tropical_weight_mul, lem:support_minkowski}
+  Let $(K,v)$ be a non-archimedean valued field and let $F,G\in K\llbracket t\rrbracket$.
+  Then, as subsets of $\mathbb{R}^2$,
+  \[
+    \mathrm{NP}(FG)\ =\ \mathrm{NP}(F)\ +\ \mathrm{NP}(G).
+  \]
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  \uses{def:support_function_lower, lem:support_newton_polygon, lem:tropical_weight_mul, lem:support_minkowski}
+  Fix $\lambda\in\mathbb{R}$.
+  Using \Cref{lem:support_newton_polygon} and \Cref{lem:tropical_weight_mul},
+  \[
+    h_{\mathrm{NP}(FG)}(\lambda)=w_{FG}(\lambda)=w_F(\lambda)+w_G(\lambda)
+    =h_{\mathrm{NP}(F)}(\lambda)+h_{\mathrm{NP}(G)}(\lambda).
+  \]
+  By \Cref{lem:support_minkowski}, the right-hand side equals $h_{\mathrm{NP}(F)+\mathrm{NP}(G)}(\lambda)$.
+  Thus
+  \[
+    h_{\mathrm{NP}(FG)}(\lambda)=h_{\mathrm{NP}(F)+\mathrm{NP}(G)}(\lambda)\qquad \forall \lambda\in\mathbb{R}.
+  \]
+  Finally, in the class of closed convex vertically downward closed subsets of $\mathbb{R}^2$,
+  equality of all support functionals $\lambda\mapsto \inf(y+\lambda x)$ implies equality of sets.
+  Hence $\mathrm{NP}(FG)=\mathrm{NP}(F)+\mathrm{NP}(G)$.
+\end{proof}
+
+\begin{theorem}[Product formula over $\mathbb{Q}_p$]
+  \label{thm:newton_polygon_mul_Qp}
+  \lean{GhostConjecture.newton_polygon_mul_Qp}
+  \leanok
+  \uses{def:vp_Qp, def:fps_ring, def:newton_polygon, thm:newton_polygon_mul}
+  \textbf{Proposition.}
+  Let $F(t) = \sum_{n \geq 0} f_n t^n$ and $G(t) = \sum_{n \geq 0} g_n t^n$ be two power series in $\mathbb{Q}_p\llbracket t\rrbracket$.
+  Then the Newton polygon of $F(t)G(t)$ is the Minkowski sum of the Newton polygons of $F(t)$ and $G(t)$:
+  \[
+    \mathrm{NP}(F(t)G(t))\ =\ \mathrm{NP}(F(t))\ +\ \mathrm{NP}(G(t)).
+  \]
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  \uses{def:vp_Qp, thm:newton_polygon_mul}
+  Apply \Cref{thm:newton_polygon_mul} to $(K,v)=(\mathbb{Q}_p,v_p)$.
+\end{proof}
+
+\subsection{Proof sketch for the product theorem (implementation-level roadmap)}
+
+\begin{proof}[Proof sketch (formalization roadmap)]
+  \label{proof:sketch_newton_polygon_mul}
+  \lean{GhostConjecture.newton_polygon_mul_proof_sketch}
+  \leanok
+  \uses{def:newton_polygon, def:newton_points, def:lower_convex_hull, def:minkowski_sum,
+        def:support_function_lower, def:tropical_weight,
+        lem:vp_coeff_mul_lower_bound, lem:support_newton_polygon, lem:support_minkowski, lem:tropical_weight_mul}
+  We outline the steps a proof assistant will follow.
+
+  \textbf{Step 1 (Reduce polygon equality to support functions).}
+  Work in the category of closed convex vertically downward closed subsets of $\mathbb{R}^2$.
+  Prove a “uniqueness” lemma: if $C,D$ are such sets and $h_C(\lambda)=h_D(\lambda)$ for all $\lambda\in\mathbb{R}$,
+  then $C=D$. (This is a standard separation argument using supporting half-spaces
+  $\{(x,y)\mid y+\lambda x\ge h_C(\lambda)\}$.)
+
+  \textbf{Step 2 (Compute support function of $\mathrm{NP}(F)$).}
+  Show \Cref{lem:support_newton_polygon}:
+  \[
+    h_{\mathrm{NP}(F)}(\lambda)=\inf_n (v(f_n)+\lambda n)=w_F(\lambda).
+  \]
+  This uses that $\mathrm{NP}(F)=\operatorname{LCH}(\mathcal{P}(F))$ is the smallest closed convex downward set containing
+  the discrete set of points $\{(n,v(f_n))\}$, and that affine functionals take infima on hulls at generating points.
+
+  \textbf{Step 3 (Minkowski sums add support functions).}
+  Prove \Cref{lem:support_minkowski}:
+  \[
+    h_{A+B}(\lambda)=h_A(\lambda)+h_B(\lambda).
+  \]
+  This is an $\inf$-distributivity calculation.
+
+  \textbf{Step 4 (Key algebra/analysis: multiplicativity of $w_F(\lambda)$).}
+  Prove \Cref{lem:tropical_weight_mul}:
+  \[
+    w_{FG}(\lambda)=w_F(\lambda)+w_G(\lambda).
+  \]
+  Split into:
+  \begin{itemize}
+    \item \emph{Lower bound:} from \Cref{lem:vp_coeff_mul_lower_bound} obtain
+      $v((FG)_n)+\lambda n\ge w_F(\lambda)+w_G(\lambda)$ for each $n$, hence after taking $\inf_n$:
+      $w_{FG}(\lambda)\ge w_F(\lambda)+w_G(\lambda)$.
+    \item \emph{Upper bound:} introduce the Gauss-type seminorm $\|F\|_\lambda := \sup_n \exp(-(v(f_n)+\lambda n))$,
+      so $w_F(\lambda)=-\log\|F\|_\lambda$. Prove multiplicativity $\|FG\|_\lambda=\|F\|_\lambda\|G\|_\lambda$.
+      This gives equality of $w$.
+  \end{itemize}
+
+  \textbf{Step 5 (Assemble the support-function identity).}
+  For each $\lambda$,
+  \[
+    h_{\mathrm{NP}(FG)}(\lambda)=w_{FG}(\lambda)=w_F(\lambda)+w_G(\lambda)
+    =h_{\mathrm{NP}(F)}(\lambda)+h_{\mathrm{NP}(G)}(\lambda)
+    =h_{\mathrm{NP}(F)+\mathrm{NP}(G)}(\lambda).
+  \]
+
+  \textbf{Step 6 (Conclude polygon equality).}
+  Apply Step 1 to deduce $\mathrm{NP}(FG)=\mathrm{NP}(F)+\mathrm{NP}(G)$.
+
+  \textbf{Step 7 (Specialize to $\mathbb{Q}_p$).}
+  Use \Cref{def:vp_Qp} to obtain the stated proposition over $\mathbb{Q}_p\llbracket t\rrbracket$.
+\end{proof}
