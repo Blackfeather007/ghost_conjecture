@@ -1,1 +1,13 @@
-def hello := "world"
+import GhostConjecture.Preparations.NewtonPolygon
+import GhostConjecture.Formulation.Dimensions
+import GhostConjecture.Formulation.UnramifiedDimensions
+import GhostConjecture.Formulation.BasisDegrees
+import GhostConjecture.Formulation.GhostMultiplicities
+import GhostConjecture.Formulation.GhostMultiplicityNat
+import GhostConjecture.Formulation.GhostCoefficients
+import GhostConjecture.Formulation.Remark413
+import GhostConjecture.Formulation.Prop418
+import GhostConjecture.Formulation.Prop418Increments
+import GhostConjecture.Formulation.Prop418Padic
+import GhostConjecture.Formulation.Notation427
+import GhostConjecture.Formulation.Section5Digits
