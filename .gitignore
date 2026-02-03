@@ -10,3 +10,6 @@
 /GhostConjectureLean/blueprint/web/
 /GhostConjectureLean/home_page/
 /blueprint/src/*.paux
+
+## Temporary storage 
+/output/tmp
