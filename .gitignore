@@ -1,1 +1,12 @@
-/.lake
+## Lean / Lake
+/GhostConjectureLean/.lake/
+
+## OS junk
+.DS_Store
+
+## leanblueprint (compiled/generated artifacts)
+/GhostConjectureLean/blueprint/lean_decls
+/GhostConjectureLean/blueprint/print/
+/GhostConjectureLean/blueprint/web/
+/GhostConjectureLean/home_page/
+/blueprint/src/*.paux

@@ -1,0 +1,3 @@
+[submodule "GhostConjectureLean"]
+	path = GhostConjectureLean
+	url = git@github.com:xyzw12345/GhostConjectureLean.git
