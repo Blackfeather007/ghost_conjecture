@@ -26,14 +26,11 @@ For each statement block with a `\label{...}`:
 - If the JSON already exists, **fixed** fields (`dependencies`, `latex`, `env`, `title`, etc.) are refreshed from the blueprint while **mutable** fields (`status`, `lean`) are preserved.
 - New nodes are added with default status values.
 
-### 4) Update workflow for formalized statements
+### 4) Update workflow for formalized statements/proofs
 The script supports an **update** mode that:
-- Marks `status.statement` as `formalized` in the JSON.
-- Records:
-  - `lean.file`: path to the Lean file **relative to the Lean root** (configurable).
-  - `lean.name`: the fully qualified Lean name.
-- Inserts or updates `\lean{...}` and `\leanok` inside the corresponding statement block in the blueprint file.
-  - If either is missing, it is inserted just after `\uses{...}` (or `\label{...}` if no `\uses` line exists).
+- For statements: marks `status.statement` as `formalized`, records `lean.file` (relative to the Lean root) and `lean.name`, and inserts/updates `\lean{...}` and `\leanok` inside the statement block.
+- For proofs: marks `status.proof` as `formalized` and touches the LaTeX block (reusing the existing `lean.name`).
+  - If either `\lean{...}` or `\leanok` is missing, it is inserted just after `\uses{...}` (or `\label{...}` if no `\uses` line exists).
 
 ## JSON structure
 Top level:
@@ -79,6 +76,19 @@ python pipeline/blueprint_to_proof/proof_formalize_run.py \
 ```
 
 Logs are written to `output/blueprint_to_proof/proof_formalization_log` with a filename based on the label and a timestamp.
+The proof prompt expects a single final line `PROOF_OK: YES|NO`; on `YES` the script updates proof status in the registry.
+
+### Coordinator (batch runs)
+```bash
+python pipeline/blueprint_to_proof/coordinator.py \
+  --registry output/blueprint_to_proof/blueprint_nodes.json \
+  --lean-root GhostConjectureLean \
+  --max-concurrency 2 \
+  --mode auto
+```
+
+The coordinator runs **either** statements or proofs per invocation (statements take priority if any are available), lists the selected labels, then reports success/failed for that phase.
+Use `--mode statement` or `--mode proof` to force a phase, `--max-count` for a total cap, and `--dry-run` to only print planned tasks.
 
 ### Initialize or refresh the registry
 ```bash
@@ -99,7 +109,7 @@ python pipeline/blueprint_to_proof/blueprint_registry.py update \
 Notes:
 - `--lean-file` can be absolute or relative to `--lean-root`.
 - The update will fail if the label is not present in the JSON; run `init` first.
-- Proofs are assumed to be in the same Lean file as the statement, so only statement formalization is recorded.
+- Use `--target proof` to mark the proof as formalized (requires an existing `lean.name` recorded from statement formalization).
 
 ## TODO
 - `update` currently runs a full registry refresh after modifying the blueprint and JSON. This is intentional (not performance-critical), but we should document/optimize if needed.
