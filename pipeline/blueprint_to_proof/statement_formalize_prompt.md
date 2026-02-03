@@ -11,8 +11,12 @@ The declaration depends on the following results:
 {list_of_latex_with_lean_file}
 
 You should **only** modify the file you have started, and don't change any other file!
+You only need to formalize the statement, and you don't need to formalize the proof.
+You may use lean-lsp-mcp to interact with the LEAN environment. 
 
-You may use lean-lsp-mcp to interact with the LEAN environment. **Please ensure that the files compiles with no warning after your modification.**
+If you are formalizing a theorem or a lemma, the proof part could be `:= by sorry`
+
+Please ensure that the files compiles with no warning after your modification, except for the warning that comes from sorrys outside this file or the lemma or theorem you just formalized.
 
 The import format is like `import A.B.C`
 
