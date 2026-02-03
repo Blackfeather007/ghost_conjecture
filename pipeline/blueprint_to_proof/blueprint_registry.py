@@ -269,8 +269,14 @@ def build_registry(blueprint_dir: Path, output_path: Path, verbose: bool) -> Non
 
 def resolve_lean_file(lean_root: Path, lean_file: Path) -> str:
     lean_root_abs = lean_root.resolve()
-    lean_file_path = lean_file if lean_file.is_absolute() else lean_root / lean_file
-    lean_file_abs = lean_file_path.resolve()
+    if lean_file.is_absolute():
+        lean_file_abs = lean_file.resolve()
+    else:
+        cwd_candidate = (Path.cwd() / lean_file).resolve()
+        if cwd_candidate.is_relative_to(lean_root_abs):
+            lean_file_abs = cwd_candidate
+        else:
+            lean_file_abs = (lean_root / lean_file).resolve()
     try:
         rel = lean_file_abs.relative_to(lean_root_abs)
     except ValueError as exc:

@@ -13,4 +13,18 @@
 
 ## Temporary storage 
 /output/tmp
-/output/blueprint_to_proof/statement_formalization_log
+/output/*.log
+
+## Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+## Pipeline logs
+/output/blueprint_to_proof/statement_formalization_log/
+/output/blueprint_to_proof/proof_formalization_log/

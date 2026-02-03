@@ -71,6 +71,15 @@ The script feeds the populated prompt to `codex exec` via stdin. Override with `
 The command list is used exactly as provided.
 The agent must return the final two lines in the exact `LEAN_FILE:` / `LEAN_NAME:` format specified in the prompt.
 
+### Run Codex to formalize a proof
+```bash
+python pipeline/blueprint_to_proof/proof_formalize_run.py \
+  --label def:fps_ring \
+  --lean-root GhostConjectureLean
+```
+
+Logs are written to `output/blueprint_to_proof/proof_formalization_log` with a filename based on the label and a timestamp.
+
 ### Initialize or refresh the registry
 ```bash
 python pipeline/blueprint_to_proof/blueprint_registry.py init \

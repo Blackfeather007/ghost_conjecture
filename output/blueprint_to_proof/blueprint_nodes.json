@@ -4,9 +4,9 @@
     "files": [
       "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex"
     ],
-    "generated_at": "2026-02-03T08:59:47.947916+00:00",
-    "script": "pipeline/blueprint_to_proof/blueprint_to_proof.py",
-    "updated_at": "2026-02-03T08:59:47.946986+00:00"
+    "generated_at": "2026-02-03T11:49:17.156924+00:00",
+    "script": "pipeline/blueprint_to_proof/blueprint_registry.py",
+    "updated_at": "2026-02-03T11:49:17.155688+00:00"
   },
   "nodes": {
     "def:fps_ring": {
@@ -19,19 +19,19 @@
       "label": "def:fps_ring",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Formal power series ring]\n  \\label{def:fps_ring}\n  \n  \\uses{}\n  For a commutative ring $R$, let $R\\llbracket t\\rrbracket$ denote the ring of formal power series\n  \\[\n    F(t)=\\sum_{n\\ge 0} a_n t^n,\\qquad a_n\\in R,\n  \\]\n  with the usual Cauchy product:\n  \\[\n    (FG)(t)=\\sum_{n\\ge 0}\\Big(\\sum_{i=0}^n a_i b_{n-i}\\Big)t^n.\n  \\]\n\\end{definition}"
+        "statement": "\\begin{definition}[Formal power series ring]\n  \\label{def:fps_ring}\n  \n  \\uses{}\n  \\lean{GhostConjecture.FormalPowerSeriesRing}\n  \\leanok\n  For a commutative ring $R$, let $R\\llbracket t\\rrbracket$ denote the ring of formal power series\n  \\[\n    F(t)=\\sum_{n\\ge 0} a_n t^n,\\qquad a_n\\in R,\n  \\]\n  with the usual Cauchy product:\n  \\[\n    (FG)(t)=\\sum_{n\\ge 0}\\Big(\\sum_{i=0}^n a_i b_{n-i}\\Big)t^n.\n  \\]\n\\end{definition}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/FormalPowerSeries.lean",
+        "name": "GhostConjecture.FormalPowerSeriesRing"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 32
+        "line": 30
       },
       "status": {
         "proof": "todo",
-        "statement": "todo"
+        "statement": "formalized"
       },
       "title": "Formal power series ring"
     },
@@ -155,7 +155,7 @@
       "label": "def:nonarch_valuation",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Non-archimedean valuation]\n  \\label{def:nonarch_valuation}\n  \n  \\uses{}\n  \\lean{GhostConjecture.Basic.hello}\n  \\leanok\n  A \\emph{non-archimedean valuation} on a field $K$ is a map\n  \\[\n    v : K \\to \\mathbb{R}\\cup\\{\\infty\\}\n  \\]\n  such that for all $x,y\\in K$:\n  \\begin{itemize}\n    \\item $v(0)=\\infty$ and $v(1)=0$;\n    \\item $v(xy)=v(x)+v(y)$;\n    \\item $v(x+y)\\ge \\min\\{v(x),v(y)\\}$ (ultrametric inequality).\n  \\end{itemize}\n  We call $(K,v)$ a \\emph{non-archimedean valued field}.\n\\end{definition}"
+        "statement": "\\begin{definition}[Non-archimedean valuation]\n  \\label{def:nonarch_valuation}\n  \n  \\uses{}\n  A \\emph{non-archimedean valuation} on a field $K$ is a map\n  \\[\n    v : K \\to \\mathbb{R}\\cup\\{\\infty\\}\n  \\]\n  such that for all $x,y\\in K$:\n  \\begin{itemize}\n    \\item $v(0)=\\infty$ and $v(1)=0$;\n    \\item $v(xy)=v(x)+v(y)$;\n    \\item $v(x+y)\\ge \\min\\{v(x),v(y)\\}$ (ultrametric inequality).\n  \\end{itemize}\n  We call $(K,v)$ a \\emph{non-archimedean valued field}.\n\\end{definition}"
       },
       "lean": {
         "file": "GhostConjectureLean/GhostConjecture/Basic.lean",
@@ -246,7 +246,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 24
+        "line": 22
       },
       "status": {
         "proof": "todo",
