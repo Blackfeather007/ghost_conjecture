@@ -9,7 +9,9 @@ The statement you need to formalize is contained in the following latex snippet:
 The declaration depends on the following results:
 {list_of_latex_with_lean_file}
 
-You may use lean-lsp-mcp to interact with the LEAN environment. Please ensure that the files compiles with no warning after your modification.
+You may use lean-lsp-mcp to interact with the LEAN environment. **Please ensure that the files compiles with no warning after your modification.**
+
+The import format is like `import A.B.C`
 
 Final Output (exact format):
 LEAN_FILE: <relative/path/to/file.lean>  (relative to the lean project root)

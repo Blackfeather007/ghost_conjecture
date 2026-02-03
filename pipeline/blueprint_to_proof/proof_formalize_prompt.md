@@ -18,7 +18,9 @@ The LEAN declaration name is:
 The proof of this theorem uses the following results. You can take these lemmas as conditions (no need to prove them). The statements and LEAN versions are listed below:
 {list_of_latex_with_lean_file}
 
-You may use lean-lsp-mcp to interact with the LEAN environment. Please ensure that the files compiles with no warning after your modification.
+You may use lean-lsp-mcp to interact with the LEAN environment. **Please ensure that the files compiles with no warning after your modification.**
+
+The import format is like `import A.B.C`
 
 Final Output (exact format):
 PROOF_OK: YES|NO
