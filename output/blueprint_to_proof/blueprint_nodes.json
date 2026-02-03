@@ -1,0 +1,655 @@
+{
+  "metadata": {
+    "blueprint_dir": "GhostConjectureLean/blueprint/src/chapters",
+    "files": [
+      "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex"
+    ],
+    "generated_at": "2026-02-03T08:59:47.947916+00:00",
+    "script": "pipeline/blueprint_to_proof/blueprint_to_proof.py",
+    "updated_at": "2026-02-03T08:59:47.946986+00:00"
+  },
+  "nodes": {
+    "def:fps_ring": {
+      "dependencies": {
+        "proof": [],
+        "statement": []
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:fps_ring",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[Formal power series ring]\n  \\label{def:fps_ring}\n  \n  \\uses{}\n  For a commutative ring $R$, let $R\\llbracket t\\rrbracket$ denote the ring of formal power series\n  \\[\n    F(t)=\\sum_{n\\ge 0} a_n t^n,\\qquad a_n\\in R,\n  \\]\n  with the usual Cauchy product:\n  \\[\n    (FG)(t)=\\sum_{n\\ge 0}\\Big(\\sum_{i=0}^n a_i b_{n-i}\\Big)t^n.\n  \\]\n\\end{definition}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 32
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Formal power series ring"
+    },
+    "def:lower_convex_hull": {
+      "dependencies": {
+        "proof": [],
+        "statement": []
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:lower_convex_hull",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[Lower convex hull]\n  \\label{def:lower_convex_hull}\n  \n  \\uses{}\n  Let $S\\subset \\mathbb{R}^2$.\n  The \\emph{lower convex hull} $\\operatorname{LCH}(S)$ is the intersection of all closed convex sets\n  $C\\subset\\mathbb{R}^2$ such that:\n  \\begin{itemize}\n    \\item $S\\subset C$;\n    \\item $C$ is \\emph{downward closed in the vertical direction}, i.e.\\ if $(x,y)\\in C$ and $y'\\ge y$ then $(x,y')\\in C$.\n  \\end{itemize}\n  Equivalently, $\\operatorname{LCH}(S)$ is the closed convex hull of $S$ together with all vertical rays\n  $\\{(x,y')\\mid y'\\ge y\\}$ above points $(x,y)\\in S$.\n\\end{definition}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 97
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Lower convex hull"
+    },
+    "def:minkowski_sum": {
+      "dependencies": {
+        "proof": [],
+        "statement": []
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:minkowski_sum",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[Minkowski sum]\n  \\label{def:minkowski_sum}\n  \n  \\uses{}\n  For subsets $A,B\\subset \\mathbb{R}^2$, define their \\emph{Minkowski sum} by\n  \\[\n    A+B := \\{a+b \\mid a\\in A,\\ b\\in B\\}.\n  \\]\n\\end{definition}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 87
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Minkowski sum"
+    },
+    "def:newton_points": {
+      "dependencies": {
+        "proof": [],
+        "statement": [
+          "def:nonarch_valuation",
+          "def:fps_ring"
+        ]
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:newton_points",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[Newton points of a power series]\n  \\label{def:newton_points}\n  \n  \\uses{def:nonarch_valuation, def:fps_ring}\n  Let $(K,v)$ be a non-archimedean valued field and $F(t)=\\sum_{n\\ge 0} f_n t^n\\in K\\llbracket t\\rrbracket$.\n  Define the set of \\emph{Newton points} of $F$ by\n  \\[\n    \\mathcal{P}(F) := \\{(n, v(f_n)) \\in \\mathbb{R}^2 \\mid n\\in\\mathbb{Z}_{\\ge 0},\\ f_n\\neq 0\\}.\n  \\]\n  (Coefficients $f_n=0$ are omitted, since $v(0)=\\infty$.)\n\\end{definition}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 137
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Newton points of a power series"
+    },
+    "def:newton_polygon": {
+      "dependencies": {
+        "proof": [],
+        "statement": [
+          "def:newton_points",
+          "def:lower_convex_hull"
+        ]
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:newton_polygon",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[Newton polygon]\n  \\label{def:newton_polygon}\n  \n  \\uses{def:newton_points, def:lower_convex_hull}\n  Let $(K,v)$ be a non-archimedean valued field and $F\\in K\\llbracket t\\rrbracket$.\n  The \\emph{Newton polygon} of $F$, denoted $\\mathrm{NP}(F)$, is the lower convex hull\n  \\[\n    \\mathrm{NP}(F) := \\operatorname{LCH}\\big(\\mathcal{P}(F)\\big)\\ \\subset\\ \\mathbb{R}^2.\n  \\]\n\\end{definition}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 149
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Newton polygon"
+    },
+    "def:nonarch_valuation": {
+      "dependencies": {
+        "proof": [],
+        "statement": []
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:nonarch_valuation",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[Non-archimedean valuation]\n  \\label{def:nonarch_valuation}\n  \n  \\uses{}\n  \\lean{GhostConjecture.Basic.hello}\n  \\leanok\n  A \\emph{non-archimedean valuation} on a field $K$ is a map\n  \\[\n    v : K \\to \\mathbb{R}\\cup\\{\\infty\\}\n  \\]\n  such that for all $x,y\\in K$:\n  \\begin{itemize}\n    \\item $v(0)=\\infty$ and $v(1)=0$;\n    \\item $v(xy)=v(x)+v(y)$;\n    \\item $v(x+y)\\ge \\min\\{v(x),v(y)\\}$ (ultrametric inequality).\n  \\end{itemize}\n  We call $(K,v)$ a \\emph{non-archimedean valued field}.\n\\end{definition}"
+      },
+      "lean": {
+        "file": "GhostConjectureLean/GhostConjecture/Basic.lean",
+        "name": "GhostConjecture.Basic.hello"
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 5
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "formalized"
+      },
+      "title": "Non-archimedean valuation"
+    },
+    "def:support_function_lower": {
+      "dependencies": {
+        "proof": [],
+        "statement": []
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:support_function_lower",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[Support functional for lower convex sets]\n  \\label{def:support_function_lower}\n  \n  \\uses{}\n  For $C\\subset\\mathbb{R}^2$ and $\\lambda\\in\\mathbb{R}$ define\n  \\[\n    h_C(\\lambda) := \\inf_{(x,y)\\in C}\\ (y+\\lambda x)\\ \\in\\ \\mathbb{R}\\cup\\{-\\infty,\\infty\\}.\n  \\]\n  When $C$ is closed, convex, and vertically downward closed, the family $\\{h_C(\\lambda)\\}_{\\lambda\\in\\mathbb{R}}$\n  encodes the lower boundary of $C$.\n\\end{definition}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 236
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Support functional for lower convex sets"
+    },
+    "def:tropical_weight": {
+      "dependencies": {
+        "proof": [],
+        "statement": [
+          "def:nonarch_valuation",
+          "def:fps_ring"
+        ]
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:tropical_weight",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[Tropical weight of a power series]\n  \\label{def:tropical_weight}\n  \n  \\uses{def:nonarch_valuation, def:fps_ring}\n  Let $(K,v)$ be non-archimedean and $F(t)=\\sum_{n\\ge 0} f_n t^n\\in K\\llbracket t\\rrbracket$.\n  For $\\lambda\\in\\mathbb{R}$ define the \\emph{tropical weight}\n  \\[\n    w_F(\\lambda) := \\inf_{n\\ge 0}\\ \\big(v(f_n)+\\lambda n\\big)\\ \\in\\ \\mathbb{R}\\cup\\{-\\infty,\\infty\\}.\n  \\]\n\\end{definition}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 270
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Tropical weight of a power series"
+    },
+    "def:vp_Qp": {
+      "dependencies": {
+        "proof": [],
+        "statement": [
+          "def:nonarch_valuation"
+        ]
+      },
+      "env": "definition",
+      "has_proof": false,
+      "label": "def:vp_Qp",
+      "latex": {
+        "proof": "",
+        "statement": "\\begin{definition}[$p$-adic valuation on $\\mathbb{Q}_p$]\n  \\label{def:vp_Qp}\n  \n  \\uses{def:nonarch_valuation}\n  Fix a prime $p$. On $K=\\mathbb{Q}_p$, we write $v_p$ for the standard $p$-adic valuation,\n  normalized by $v_p(p)=1$ and $v_p(0)=\\infty$.\n\\end{definition}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 24
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "$p$-adic valuation on $\\mathbb{Q}_p$"
+    },
+    "lem:coeff_mul": {
+      "dependencies": {
+        "proof": [
+          "def:fps_ring"
+        ],
+        "statement": [
+          "def:fps_ring"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:coeff_mul",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:fps_ring}\n  This is the definition of Cauchy product in $K\\llbracket t\\rrbracket$.\n\\end{proof}",
+        "statement": "\\begin{lemma}[Coefficient formula for products]\n  \\label{lem:coeff_mul}\n  \n  \\uses{def:fps_ring}\n  If $F(t)=\\sum_{n\\ge 0} f_n t^n$ and $G(t)=\\sum_{n\\ge 0} g_n t^n$ in $K\\llbracket t\\rrbracket$, then\n  the coefficient of $t^n$ in $FG$ is\n  \\[\n    (FG)_n = \\sum_{i=0}^n f_i g_{n-i}.\n  \\]\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 46
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Coefficient formula for products"
+    },
+    "lem:lch_minkowski_basic": {
+      "dependencies": {
+        "proof": [
+          "def:minkowski_sum",
+          "def:lower_convex_hull"
+        ],
+        "statement": [
+          "def:minkowski_sum",
+          "def:lower_convex_hull"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:lch_minkowski_basic",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:minkowski_sum, def:lower_convex_hull}\n  (1) is immediate from the definition of $+$.\n  (2) and (3) are standard: convexity and closedness follow from continuity of addition on $\\mathbb{R}^2$ and\n  convexity of preimages; downward closure is preserved because increasing the $y$-coordinate in either summand\n  increases the $y$-coordinate of the sum.\n\\end{proof}",
+        "statement": "\\begin{lemma}[Basic properties of Minkowski sums and lower hulls]\n  \\label{lem:lch_minkowski_basic}\n  \n  \\uses{def:minkowski_sum, def:lower_convex_hull}\n  Let $A,B\\subset\\mathbb{R}^2$.\n  \\begin{enumerate}\n    \\item If $A\\subset A'$ and $B\\subset B'$, then $A+B\\subset A'+B'$.\n    \\item If $C,D$ are closed and convex, then $C+D$ is closed and convex.\n    \\item If $C,D$ are vertically downward closed, then $C+D$ is vertically downward closed.\n  \\end{enumerate}\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 112
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Basic properties of Minkowski sums and lower hulls"
+    },
+    "lem:newton_polygon_monotone": {
+      "dependencies": {
+        "proof": [
+          "def:newton_points",
+          "def:newton_polygon",
+          "def:lower_convex_hull"
+        ],
+        "statement": [
+          "def:newton_polygon",
+          "def:newton_points"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:newton_polygon_monotone",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:newton_points, def:newton_polygon, def:lower_convex_hull}\n  The hypothesis means every Newton point $(n,v(g_n))$ lies on or above $(n,v(f_n))$ at the same $x$-coordinate.\n  Since $\\mathrm{NP}(F)$ is vertically downward closed and contains $\\mathcal{P}(F)$, it contains $\\mathcal{P}(G)$.\n  Minimality of $\\operatorname{LCH}$ gives $\\mathrm{NP}(G)=\\operatorname{LCH}(\\mathcal{P}(G))\\subseteq \\operatorname{LCH}(\\mathcal{P}(F))=\\mathrm{NP}(F)$.\n\\end{proof}",
+        "statement": "\\begin{lemma}[Monotonicity under coefficientwise valuation bounds]\n  \\label{lem:newton_polygon_monotone}\n  \n  \\uses{def:newton_polygon, def:newton_points}\n  Let $F(t)=\\sum f_n t^n$ and $G(t)=\\sum g_n t^n$ in $K\\llbracket t\\rrbracket$.\n  Suppose that for all $n$ with $f_n\\neq 0$ and $g_n\\neq 0$ we have $v(g_n)\\ge v(f_n)$.\n  Then $\\mathrm{NP}(G)\\subseteq \\mathrm{NP}(F)$.\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 215
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Monotonicity under coefficientwise valuation bounds"
+    },
+    "lem:newton_polygon_smul": {
+      "dependencies": {
+        "proof": [
+          "def:nonarch_valuation",
+          "def:newton_points",
+          "def:newton_polygon",
+          "def:minkowski_sum"
+        ],
+        "statement": [
+          "def:nonarch_valuation",
+          "def:newton_polygon"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:newton_polygon_smul",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:nonarch_valuation, def:newton_points, def:newton_polygon, def:minkowski_sum}\n  For each $n$, $(cF)_n=c f_n$ so $v((cF)_n)=v(c)+v(f_n)$ whenever $f_n\\neq 0$.\n  Thus $\\mathcal{P}(cF)=\\mathcal{P}(F)+\\{(0,v(c))\\}$, and again $\\operatorname{LCH}$ is compatible with translation.\n\\end{proof}",
+        "statement": "\\begin{lemma}[Vertical shift by multiplication by a scalar]\n  \\label{lem:newton_polygon_smul}\n  \n  \\uses{def:nonarch_valuation, def:newton_polygon}\n  Let $c\\in K$ and $F\\in K\\llbracket t\\rrbracket$.\n  If $c\\neq 0$ then\n  \\[\n    \\mathrm{NP}(cF)=\\mathrm{NP}(F)+\\{(0,v(c))\\}.\n  \\]\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 197
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Vertical shift by multiplication by a scalar"
+    },
+    "lem:newton_polygon_tpow": {
+      "dependencies": {
+        "proof": [
+          "def:newton_polygon",
+          "def:newton_points",
+          "def:minkowski_sum"
+        ],
+        "statement": [
+          "def:newton_polygon",
+          "def:newton_points"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:newton_polygon_tpow",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:newton_polygon, def:newton_points, def:minkowski_sum}\n  The coefficients of $t^kF$ satisfy $(t^kF)_n=f_{n-k}$ for $n\\ge k$ and $0$ otherwise.\n  Hence $\\mathcal{P}(t^kF)=\\mathcal{P}(F)+\\{(k,0)\\}$ at the level of point sets.\n  Taking $\\operatorname{LCH}$ and using that translation commutes with convex hull and vertical closure yields the claim.\n\\end{proof}",
+        "statement": "\\begin{lemma}[Horizontal shift by multiplication by $t^k$]\n  \\label{lem:newton_polygon_tpow}\n  \n  \\uses{def:newton_polygon, def:newton_points}\n  Let $F\\in K\\llbracket t\\rrbracket$ and $k\\in\\mathbb{Z}_{\\ge 0}$.\n  Then\n  \\[\n    \\mathrm{NP}(t^k F)=\\mathrm{NP}(F) + \\{(k,0)\\}.\n  \\]\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 178
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Horizontal shift by multiplication by $t^k$"
+    },
+    "lem:newton_polygon_zero": {
+      "dependencies": {
+        "proof": [
+          "def:newton_polygon",
+          "def:newton_points"
+        ],
+        "statement": [
+          "def:newton_polygon",
+          "def:newton_points"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:newton_polygon_zero",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:newton_polygon, def:newton_points}\n  Immediate from the definition: all coefficients vanish so there are no Newton points.\n  The second statement is just unpacking $\\operatorname{LCH}$.\n\\end{proof}",
+        "statement": "\\begin{lemma}[Newton polygon of the zero series]\n  \\label{lem:newton_polygon_zero}\n  \n  \\uses{def:newton_polygon, def:newton_points}\n  If $F=0$ in $K\\llbracket t\\rrbracket$, then $\\mathcal{P}(F)=\\varnothing$ and hence $\\mathrm{NP}(F)=\\operatorname{LCH}(\\varnothing)$.\n  In particular, $\\mathrm{NP}(0)$ is the minimal closed convex vertically downward closed subset of $\\mathbb{R}^2$\n  (often taken to be $\\varnothing$, depending on the chosen convention for $\\operatorname{LCH}(\\varnothing)$).\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 160
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Newton polygon of the zero series"
+    },
+    "lem:support_minkowski": {
+      "dependencies": {
+        "proof": [
+          "def:support_function_lower",
+          "def:minkowski_sum"
+        ],
+        "statement": [
+          "def:support_function_lower",
+          "def:minkowski_sum"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:support_minkowski",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:support_function_lower, def:minkowski_sum}\n  By definition,\n  \\[\n    h_{A+B}(\\lambda)=\\inf_{a\\in A,\\ b\\in B}\\big((a_y+b_y)+\\lambda(a_x+b_x)\\big)\n    =\\inf_{a\\in A,\\ b\\in B}\\big((a_y+\\lambda a_x)+(b_y+\\lambda b_x)\\big)\n    =h_A(\\lambda)+h_B(\\lambda).\n  \\]\n\\end{proof}",
+        "statement": "\\begin{lemma}[Support function of a Minkowski sum]\n  \\label{lem:support_minkowski}\n  \n  \\uses{def:support_function_lower, def:minkowski_sum}\n  For $A,B\\subset\\mathbb{R}^2$ and $\\lambda\\in\\mathbb{R}$,\n  \\[\n    h_{A+B}(\\lambda)=h_A(\\lambda)+h_B(\\lambda),\n  \\]\n  with the usual conventions for extended real addition.\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 248
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Support function of a Minkowski sum"
+    },
+    "lem:support_newton_polygon": {
+      "dependencies": {
+        "proof": [
+          "def:newton_polygon",
+          "def:newton_points",
+          "def:lower_convex_hull",
+          "def:support_function_lower",
+          "def:tropical_weight"
+        ],
+        "statement": [
+          "def:newton_polygon",
+          "def:support_function_lower",
+          "def:tropical_weight"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:support_newton_polygon",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:newton_polygon, def:newton_points, def:lower_convex_hull, def:support_function_lower, def:tropical_weight}\n  By definition, $\\mathrm{NP}(F)$ is the smallest closed convex vertically downward closed set containing $\\mathcal{P}(F)$.\n  The functional $(x,y)\\mapsto y+\\lambda x$ is affine and hence attains its infimum over a closed convex hull\n  at extreme points; vertical downward closure does not change the infimum because increasing $y$ increases $y+\\lambda x$.\n  Therefore,\n  \\[\n    h_{\\mathrm{NP}(F)}(\\lambda)=\\inf_{(n,v(f_n))\\in\\mathcal{P}(F)}\\big(v(f_n)+\\lambda n\\big)\n    =\\inf_{n\\ge 0}\\big(v(f_n)+\\lambda n\\big)=w_F(\\lambda).\n  \\]\n  (Here coefficients $f_n=0$ contribute $v(f_n)=\\infty$ and do not affect the infimum.)\n\\end{proof}",
+        "statement": "\\begin{lemma}[Support function of the Newton polygon]\n  \\label{lem:support_newton_polygon}\n  \n  \\uses{def:newton_polygon, def:support_function_lower, def:tropical_weight}\n  For $F\\in K\\llbracket t\\rrbracket$ and $\\lambda\\in\\mathbb{R}$,\n  \\[\n    h_{\\mathrm{NP}(F)}(\\lambda)\\ =\\ w_F(\\lambda).\n  \\]\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 281
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Support function of the Newton polygon"
+    },
+    "lem:tropical_weight_mul": {
+      "dependencies": {
+        "proof": [
+          "def:tropical_weight",
+          "lem:vp_coeff_mul_lower_bound"
+        ],
+        "statement": [
+          "def:tropical_weight",
+          "lem:vp_coeff_mul_lower_bound"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:tropical_weight_mul",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:tropical_weight, lem:vp_coeff_mul_lower_bound}\n  We split into two inequalities.\n\n  \\emph{(1) $\\ge$ inequality.}\n  For each $n$,\n  \\[\n    v((FG)_n)\\ \\ge\\ \\min_{i}\\big(v(f_i)+v(g_{n-i})\\big)\n  \\]\n  by \\Cref{lem:vp_coeff_mul_lower_bound}. Add $\\lambda n$ and use $n=i+(n-i)$:\n  \\[\n    v((FG)_n)+\\lambda n\\ \\ge\\ \\min_i \\big((v(f_i)+\\lambda i)+(v(g_{n-i})+\\lambda(n-i))\\big)\n    \\ \\ge\\ w_F(\\lambda)+w_G(\\lambda).\n  \\]\n  Taking $\\inf_n$ gives $w_{FG}(\\lambda)\\ge w_F(\\lambda)+w_G(\\lambda)$.\n\n  \\emph{(2) $\\le$ inequality.}\n  This is the only subtle step for formalization: cancellation in $(FG)_n=\\sum_i f_i g_{n-i}$ can raise valuations.\n  To obtain equality at the level of the \\emph{infimum over all $n$}, one uses a Gauss-type non-archimedean seminorm:\n  set $\\|\\sum a_n t^n\\|_\\lambda := \\sup_n \\exp(-(v(a_n)+\\lambda n))$ (equivalently, $w_F(\\lambda)=-\\log \\|F\\|_\\lambda$).\n  In standard non-archimedean analysis, this seminorm is multiplicative on $K\\llbracket t\\rrbracket$ (or on the relevant\n  subring where it is finite), so $\\|FG\\|_\\lambda=\\|F\\|_\\lambda\\|G\\|_\\lambda$, hence $w_{FG}(\\lambda)=w_F(\\lambda)+w_G(\\lambda)$.\n\n  \\emph{Lean planning note (mathematical content).}\n  One can formalize multiplicativity in either of two equivalent ways:\n  \\begin{itemize}\n    \\item (Norm route) Introduce the seminorm $\\|\\cdot\\|_\\lambda$ as a \u201cGauss norm at weight $\\lambda$\u201d and prove\n      $\\|FG\\|_\\lambda=\\|F\\|_\\lambda\\|G\\|_\\lambda$ using the ultrametric inequality and the fact that $\\sup$ is compatible\n      with Cauchy products in the non-archimedean setting.\n    \\item (Convex-analytic route) Work with the min-plus convolution\n      \\[\n        (u\\star v)(n)=\\inf_{i+j=n}(u(i)+v(j)),\\qquad u(n):=v(f_n),\\ v(n):=v(g_n),\n      \\]\n      observe $v((FG)_n)\\ge (u\\star v)(n)$, and show that passing to the lower convex envelope\n      (Legendre--Fenchel biconjugate) turns this inequality into an equality of support functions, yielding the desired $\\le$.\n  \\end{itemize}\n  Either route gives the required $\\le$ inequality for $w$.\n\\end{proof}",
+        "statement": "\\begin{lemma}[Tropical weight is multiplicative]\n  \\label{lem:tropical_weight_mul}\n  \n  \\uses{def:tropical_weight, lem:vp_coeff_mul_lower_bound}\n  Let $(K,v)$ be a non-archimedean valued field and $F,G\\in K\\llbracket t\\rrbracket$.\n  Then for all $\\lambda\\in\\mathbb{R}$,\n  \\[\n    w_{FG}(\\lambda)\\ =\\ w_F(\\lambda)\\ +\\ w_G(\\lambda).\n  \\]\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 307
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Tropical weight is multiplicative"
+    },
+    "lem:vp_coeff_mul_lower_bound": {
+      "dependencies": {
+        "proof": [
+          "def:nonarch_valuation",
+          "lem:coeff_mul"
+        ],
+        "statement": [
+          "def:nonarch_valuation",
+          "lem:coeff_mul"
+        ]
+      },
+      "env": "lemma",
+      "has_proof": true,
+      "label": "lem:vp_coeff_mul_lower_bound",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:nonarch_valuation, lem:coeff_mul}\n  By \\Cref{lem:coeff_mul}, $(FG)_n=\\sum_{i=0}^n f_i g_{n-i}$.\n  Apply the ultrametric inequality iteratively:\n  \\[\n    v\\Big(\\sum_{i=0}^n f_i g_{n-i}\\Big)\\ \\ge\\ \\min_i v(f_i g_{n-i})\n    \\ =\\ \\min_i \\big(v(f_i)+v(g_{n-i})\\big).\n  \\]\n\\end{proof}",
+        "statement": "\\begin{lemma}[Valuation lower bound on convolution coefficients]\n  \\label{lem:vp_coeff_mul_lower_bound}\n  \n  \\uses{def:nonarch_valuation, lem:coeff_mul}\n  Let $(K,v)$ be a non-archimedean valued field and $F,G\\in K\\llbracket t\\rrbracket$.\n  Then for all $n\\ge 0$,\n  \\[\n    v\\big((FG)_n\\big)\\ \\ge\\ \\min_{0\\le i\\le n}\\big(v(f_i)+v(g_{n-i})\\big).\n  \\]\n\\end{lemma}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 63
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Valuation lower bound on convolution coefficients"
+    },
+    "thm:newton_polygon_mul": {
+      "dependencies": {
+        "proof": [
+          "def:support_function_lower",
+          "lem:support_newton_polygon",
+          "lem:tropical_weight_mul",
+          "lem:support_minkowski"
+        ],
+        "statement": [
+          "def:newton_polygon",
+          "def:minkowski_sum",
+          "lem:support_newton_polygon",
+          "lem:tropical_weight_mul",
+          "lem:support_minkowski"
+        ]
+      },
+      "env": "theorem",
+      "has_proof": true,
+      "label": "thm:newton_polygon_mul",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:support_function_lower, lem:support_newton_polygon, lem:tropical_weight_mul, lem:support_minkowski}\n  Fix $\\lambda\\in\\mathbb{R}$.\n  Using \\Cref{lem:support_newton_polygon} and \\Cref{lem:tropical_weight_mul},\n  \\[\n    h_{\\mathrm{NP}(FG)}(\\lambda)=w_{FG}(\\lambda)=w_F(\\lambda)+w_G(\\lambda)\n    =h_{\\mathrm{NP}(F)}(\\lambda)+h_{\\mathrm{NP}(G)}(\\lambda).\n  \\]\n  By \\Cref{lem:support_minkowski}, the right-hand side equals $h_{\\mathrm{NP}(F)+\\mathrm{NP}(G)}(\\lambda)$.\n  Thus\n  \\[\n    h_{\\mathrm{NP}(FG)}(\\lambda)=h_{\\mathrm{NP}(F)+\\mathrm{NP}(G)}(\\lambda)\\qquad \\forall \\lambda\\in\\mathbb{R}.\n  \\]\n  Finally, in the class of closed convex vertically downward closed subsets of $\\mathbb{R}^2$,\n  equality of all support functionals $\\lambda\\mapsto \\inf(y+\\lambda x)$ implies equality of sets.\n  Hence $\\mathrm{NP}(FG)=\\mathrm{NP}(F)+\\mathrm{NP}(G)$.\n\\end{proof}",
+        "statement": "\\begin{theorem}[Newton polygon of a product]\n  \\label{thm:newton_polygon_mul}\n  \n  \\uses{def:newton_polygon, def:minkowski_sum, lem:support_newton_polygon, lem:tropical_weight_mul, lem:support_minkowski}\n  Let $(K,v)$ be a non-archimedean valued field and let $F,G\\in K\\llbracket t\\rrbracket$.\n  Then, as subsets of $\\mathbb{R}^2$,\n  \\[\n    \\mathrm{NP}(FG)\\ =\\ \\mathrm{NP}(F)\\ +\\ \\mathrm{NP}(G).\n  \\]\n\\end{theorem}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 360
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Newton polygon of a product"
+    },
+    "thm:newton_polygon_mul_Qp": {
+      "dependencies": {
+        "proof": [
+          "def:vp_Qp",
+          "thm:newton_polygon_mul"
+        ],
+        "statement": [
+          "def:vp_Qp",
+          "def:fps_ring",
+          "def:newton_polygon",
+          "thm:newton_polygon_mul"
+        ]
+      },
+      "env": "theorem",
+      "has_proof": true,
+      "label": "thm:newton_polygon_mul_Qp",
+      "latex": {
+        "proof": "\\begin{proof}\n \n  \\uses{def:vp_Qp, thm:newton_polygon_mul}\n  Apply \\Cref{thm:newton_polygon_mul} to $(K,v)=(\\mathbb{Q}_p,v_p)$.\n\\end{proof}",
+        "statement": "\\begin{theorem}[Product formula over $\\mathbb{Q}_p$]\n  \\label{thm:newton_polygon_mul_Qp}\n  \n  \\uses{def:vp_Qp, def:fps_ring, def:newton_polygon, thm:newton_polygon_mul}\n  \\textbf{Proposition.}\n  Let $F(t) = \\sum_{n \\geq 0} f_n t^n$ and $G(t) = \\sum_{n \\geq 0} g_n t^n$ be two power series in $\\mathbb{Q}_p\\llbracket t\\rrbracket$.\n  Then the Newton polygon of $F(t)G(t)$ is the Minkowski sum of the Newton polygons of $F(t)$ and $G(t)$:\n  \\[\n    \\mathrm{NP}(F(t)G(t))\\ =\\ \\mathrm{NP}(F(t))\\ +\\ \\mathrm{NP}(G(t)).\n  \\]\n\\end{theorem}"
+      },
+      "lean": {
+        "file": null,
+        "name": null
+      },
+      "source": {
+        "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
+        "line": 390
+      },
+      "status": {
+        "proof": "todo",
+        "statement": "todo"
+      },
+      "title": "Product formula over $\\mathbb{Q}_p$"
+    }
+  }
+}
