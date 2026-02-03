@@ -4,9 +4,9 @@
     "files": [
       "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex"
     ],
-    "generated_at": "2026-02-03T11:49:17.156924+00:00",
+    "generated_at": "2026-02-03T14:49:17.079252+00:00",
     "script": "pipeline/blueprint_to_proof/blueprint_registry.py",
-    "updated_at": "2026-02-03T11:49:17.155688+00:00"
+    "updated_at": "2026-02-03T14:49:17.078224+00:00"
   },
   "nodes": {
     "def:fps_ring": {
@@ -19,7 +19,7 @@
       "label": "def:fps_ring",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Formal power series ring]\n  \\label{def:fps_ring}\n  \n  \\uses{}\n  \\lean{GhostConjecture.FormalPowerSeriesRing}\n  \\leanok\n  For a commutative ring $R$, let $R\\llbracket t\\rrbracket$ denote the ring of formal power series\n  \\[\n    F(t)=\\sum_{n\\ge 0} a_n t^n,\\qquad a_n\\in R,\n  \\]\n  with the usual Cauchy product:\n  \\[\n    (FG)(t)=\\sum_{n\\ge 0}\\Big(\\sum_{i=0}^n a_i b_{n-i}\\Big)t^n.\n  \\]\n\\end{definition}"
+        "statement": "\\begin{definition}[Formal power series ring]\n  \\label{def:fps_ring}\n  \n  \\uses{}\n  For a commutative ring $R$, let $R\\llbracket t\\rrbracket$ denote the ring of formal power series\n  \\[\n    F(t)=\\sum_{n\\ge 0} a_n t^n,\\qquad a_n\\in R,\n  \\]\n  with the usual Cauchy product:\n  \\[\n    (FG)(t)=\\sum_{n\\ge 0}\\Big(\\sum_{i=0}^n a_i b_{n-i}\\Big)t^n.\n  \\]\n\\end{definition}"
       },
       "lean": {
         "file": "GhostConjecture/FormalPowerSeries.lean",
@@ -27,7 +27,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 30
+        "line": 32
       },
       "status": {
         "proof": "todo",
@@ -45,19 +45,19 @@
       "label": "def:lower_convex_hull",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Lower convex hull]\n  \\label{def:lower_convex_hull}\n  \n  \\uses{}\n  Let $S\\subset \\mathbb{R}^2$.\n  The \\emph{lower convex hull} $\\operatorname{LCH}(S)$ is the intersection of all closed convex sets\n  $C\\subset\\mathbb{R}^2$ such that:\n  \\begin{itemize}\n    \\item $S\\subset C$;\n    \\item $C$ is \\emph{downward closed in the vertical direction}, i.e.\\ if $(x,y)\\in C$ and $y'\\ge y$ then $(x,y')\\in C$.\n  \\end{itemize}\n  Equivalently, $\\operatorname{LCH}(S)$ is the closed convex hull of $S$ together with all vertical rays\n  $\\{(x,y')\\mid y'\\ge y\\}$ above points $(x,y)\\in S$.\n\\end{definition}"
+        "statement": "\\begin{definition}[Lower convex hull]\n  \\label{def:lower_convex_hull}\n  \n  \\uses{}\n  \\lean{GhostConjecture.lowerConvexHull}\n  \\leanok\n  Let $S\\subset \\mathbb{R}^2$.\n  The \\emph{lower convex hull} $\\operatorname{LCH}(S)$ is the intersection of all closed convex sets\n  $C\\subset\\mathbb{R}^2$ such that:\n  \\begin{itemize}\n    \\item $S\\subset C$;\n    \\item $C$ is \\emph{downward closed in the vertical direction}, i.e.\\ if $(x,y)\\in C$ and $y'\\ge y$ then $(x,y')\\in C$.\n  \\end{itemize}\n  Equivalently, $\\operatorname{LCH}(S)$ is the closed convex hull of $S$ together with all vertical rays\n  $\\{(x,y')\\mid y'\\ge y\\}$ above points $(x,y)\\in S$.\n\\end{definition}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/Geometry/LowerConvexHull.lean",
+        "name": "GhostConjecture.lowerConvexHull"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 97
+        "line": 103
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "Lower convex hull"
     },
@@ -71,19 +71,19 @@
       "label": "def:minkowski_sum",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Minkowski sum]\n  \\label{def:minkowski_sum}\n  \n  \\uses{}\n  For subsets $A,B\\subset \\mathbb{R}^2$, define their \\emph{Minkowski sum} by\n  \\[\n    A+B := \\{a+b \\mid a\\in A,\\ b\\in B\\}.\n  \\]\n\\end{definition}"
+        "statement": "\\begin{definition}[Minkowski sum]\n  \\label{def:minkowski_sum}\n  \n  \\uses{}\n  \\lean{GhostConjecture.minkowskiSum}\n  \\leanok\n  For subsets $A,B\\subset \\mathbb{R}^2$, define their \\emph{Minkowski sum} by\n  \\[\n    A+B := \\{a+b \\mid a\\in A,\\ b\\in B\\}.\n  \\]\n\\end{definition}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/MinkowskiSum.lean",
+        "name": "GhostConjecture.minkowskiSum"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 87
+        "line": 91
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "Minkowski sum"
     },
@@ -100,19 +100,19 @@
       "label": "def:newton_points",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Newton points of a power series]\n  \\label{def:newton_points}\n  \n  \\uses{def:nonarch_valuation, def:fps_ring}\n  Let $(K,v)$ be a non-archimedean valued field and $F(t)=\\sum_{n\\ge 0} f_n t^n\\in K\\llbracket t\\rrbracket$.\n  Define the set of \\emph{Newton points} of $F$ by\n  \\[\n    \\mathcal{P}(F) := \\{(n, v(f_n)) \\in \\mathbb{R}^2 \\mid n\\in\\mathbb{Z}_{\\ge 0},\\ f_n\\neq 0\\}.\n  \\]\n  (Coefficients $f_n=0$ are omitted, since $v(0)=\\infty$.)\n\\end{definition}"
+        "statement": "\\begin{definition}[Newton points of a power series]\n  \\label{def:newton_points}\n  \n  \\uses{def:nonarch_valuation, def:fps_ring}\n  \\lean{GhostConjecture.newtonPoints}\n  \\leanok\n  Let $(K,v)$ be a non-archimedean valued field and $F(t)=\\sum_{n\\ge 0} f_n t^n\\in K\\llbracket t\\rrbracket$.\n  Define the set of \\emph{Newton points} of $F$ by\n  \\[\n    \\mathcal{P}(F) := \\{(n, v(f_n)) \\in \\mathbb{R}^2 \\mid n\\in\\mathbb{Z}_{\\ge 0},\\ f_n\\neq 0\\}.\n  \\]\n  (Coefficients $f_n=0$ are omitted, since $v(0)=\\infty$.)\n\\end{definition}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/NewtonPoints.lean",
+        "name": "GhostConjecture.newtonPoints"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 137
+        "line": 147
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "Newton points of a power series"
     },
@@ -129,19 +129,19 @@
       "label": "def:newton_polygon",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Newton polygon]\n  \\label{def:newton_polygon}\n  \n  \\uses{def:newton_points, def:lower_convex_hull}\n  Let $(K,v)$ be a non-archimedean valued field and $F\\in K\\llbracket t\\rrbracket$.\n  The \\emph{Newton polygon} of $F$, denoted $\\mathrm{NP}(F)$, is the lower convex hull\n  \\[\n    \\mathrm{NP}(F) := \\operatorname{LCH}\\big(\\mathcal{P}(F)\\big)\\ \\subset\\ \\mathbb{R}^2.\n  \\]\n\\end{definition}"
+        "statement": "\\begin{definition}[Newton polygon]\n  \\label{def:newton_polygon}\n  \n  \\uses{def:newton_points, def:lower_convex_hull}\n  \\lean{GhostConjecture.NewtonPolygon.newtonPolygon}\n  \\leanok\n  Let $(K,v)$ be a non-archimedean valued field and $F\\in K\\llbracket t\\rrbracket$.\n  The \\emph{Newton polygon} of $F$, denoted $\\mathrm{NP}(F)$, is the lower convex hull\n  \\[\n    \\mathrm{NP}(F) := \\operatorname{LCH}\\big(\\mathcal{P}(F)\\big)\\ \\subset\\ \\mathbb{R}^2.\n  \\]\n\\end{definition}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/NewtonPolygon/NewtonPolygon.lean",
+        "name": "GhostConjecture.NewtonPolygon.newtonPolygon"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 149
+        "line": 161
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "Newton polygon"
     },
@@ -181,19 +181,19 @@
       "label": "def:support_function_lower",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Support functional for lower convex sets]\n  \\label{def:support_function_lower}\n  \n  \\uses{}\n  For $C\\subset\\mathbb{R}^2$ and $\\lambda\\in\\mathbb{R}$ define\n  \\[\n    h_C(\\lambda) := \\inf_{(x,y)\\in C}\\ (y+\\lambda x)\\ \\in\\ \\mathbb{R}\\cup\\{-\\infty,\\infty\\}.\n  \\]\n  When $C$ is closed, convex, and vertically downward closed, the family $\\{h_C(\\lambda)\\}_{\\lambda\\in\\mathbb{R}}$\n  encodes the lower boundary of $C$.\n\\end{definition}"
+        "statement": "\\begin{definition}[Support functional for lower convex sets]\n  \\label{def:support_function_lower}\n  \n  \\uses{}\n  \\lean{GhostConjecture.supportFunctionalLower}\n  \\leanok\n  For $C\\subset\\mathbb{R}^2$ and $\\lambda\\in\\mathbb{R}$ define\n  \\[\n    h_C(\\lambda) := \\inf_{(x,y)\\in C}\\ (y+\\lambda x)\\ \\in\\ \\mathbb{R}\\cup\\{-\\infty,\\infty\\}.\n  \\]\n  When $C$ is closed, convex, and vertically downward closed, the family $\\{h_C(\\lambda)\\}_{\\lambda\\in\\mathbb{R}}$\n  encodes the lower boundary of $C$.\n\\end{definition}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/SupportFunctionalLower.lean",
+        "name": "GhostConjecture.supportFunctionalLower"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 236
+        "line": 250
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "Support functional for lower convex sets"
     },
@@ -210,19 +210,19 @@
       "label": "def:tropical_weight",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[Tropical weight of a power series]\n  \\label{def:tropical_weight}\n  \n  \\uses{def:nonarch_valuation, def:fps_ring}\n  Let $(K,v)$ be non-archimedean and $F(t)=\\sum_{n\\ge 0} f_n t^n\\in K\\llbracket t\\rrbracket$.\n  For $\\lambda\\in\\mathbb{R}$ define the \\emph{tropical weight}\n  \\[\n    w_F(\\lambda) := \\inf_{n\\ge 0}\\ \\big(v(f_n)+\\lambda n\\big)\\ \\in\\ \\mathbb{R}\\cup\\{-\\infty,\\infty\\}.\n  \\]\n\\end{definition}"
+        "statement": "\\begin{definition}[Tropical weight of a power series]\n  \\label{def:tropical_weight}\n  \n  \\uses{def:nonarch_valuation, def:fps_ring}\n  \\lean{GhostConjecture.NewtonPolygon.tropicalWeight}\n  \\leanok\n  Let $(K,v)$ be non-archimedean and $F(t)=\\sum_{n\\ge 0} f_n t^n\\in K\\llbracket t\\rrbracket$.\n  For $\\lambda\\in\\mathbb{R}$ define the \\emph{tropical weight}\n  \\[\n    w_F(\\lambda) := \\inf_{n\\ge 0}\\ \\big(v(f_n)+\\lambda n\\big)\\ \\in\\ \\mathbb{R}\\cup\\{-\\infty,\\infty\\}.\n  \\]\n\\end{definition}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/NewtonPolygon/TropicalWeight.lean",
+        "name": "GhostConjecture.NewtonPolygon.tropicalWeight"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 270
+        "line": 288
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "Tropical weight of a power series"
     },
@@ -238,19 +238,19 @@
       "label": "def:vp_Qp",
       "latex": {
         "proof": "",
-        "statement": "\\begin{definition}[$p$-adic valuation on $\\mathbb{Q}_p$]\n  \\label{def:vp_Qp}\n  \n  \\uses{def:nonarch_valuation}\n  Fix a prime $p$. On $K=\\mathbb{Q}_p$, we write $v_p$ for the standard $p$-adic valuation,\n  normalized by $v_p(p)=1$ and $v_p(0)=\\infty$.\n\\end{definition}"
+        "statement": "\\begin{definition}[$p$-adic valuation on $\\mathbb{Q}_p$]\n  \\label{def:vp_Qp}\n  \n  \\uses{def:nonarch_valuation}\n  \\lean{GhostConjecture.vpQp}\n  \\leanok\n  Fix a prime $p$. On $K=\\mathbb{Q}_p$, we write $v_p$ for the standard $p$-adic valuation,\n  normalized by $v_p(p)=1$ and $v_p(0)=\\infty$.\n\\end{definition}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/PadicValuation.lean",
+        "name": "GhostConjecture.vpQp"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
         "line": 22
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "$p$-adic valuation on $\\mathbb{Q}_p$"
     },
@@ -268,19 +268,19 @@
       "label": "lem:coeff_mul",
       "latex": {
         "proof": "\\begin{proof}\n \n  \\uses{def:fps_ring}\n  This is the definition of Cauchy product in $K\\llbracket t\\rrbracket$.\n\\end{proof}",
-        "statement": "\\begin{lemma}[Coefficient formula for products]\n  \\label{lem:coeff_mul}\n  \n  \\uses{def:fps_ring}\n  If $F(t)=\\sum_{n\\ge 0} f_n t^n$ and $G(t)=\\sum_{n\\ge 0} g_n t^n$ in $K\\llbracket t\\rrbracket$, then\n  the coefficient of $t^n$ in $FG$ is\n  \\[\n    (FG)_n = \\sum_{i=0}^n f_i g_{n-i}.\n  \\]\n\\end{lemma}"
+        "statement": "\\begin{lemma}[Coefficient formula for products]\n  \\label{lem:coeff_mul}\n  \n  \\uses{def:fps_ring}\n  \\lean{GhostConjecture.coeff_mul}\n  \\leanok\n  If $F(t)=\\sum_{n\\ge 0} f_n t^n$ and $G(t)=\\sum_{n\\ge 0} g_n t^n$ in $K\\llbracket t\\rrbracket$, then\n  the coefficient of $t^n$ in $FG$ is\n  \\[\n    (FG)_n = \\sum_{i=0}^n f_i g_{n-i}.\n  \\]\n\\end{lemma}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/FormalPowerSeries.lean",
+        "name": "GhostConjecture.coeff_mul"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
         "line": 46
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "Coefficient formula for products"
     },
@@ -300,19 +300,19 @@
       "label": "lem:lch_minkowski_basic",
       "latex": {
         "proof": "\\begin{proof}\n \n  \\uses{def:minkowski_sum, def:lower_convex_hull}\n  (1) is immediate from the definition of $+$.\n  (2) and (3) are standard: convexity and closedness follow from continuity of addition on $\\mathbb{R}^2$ and\n  convexity of preimages; downward closure is preserved because increasing the $y$-coordinate in either summand\n  increases the $y$-coordinate of the sum.\n\\end{proof}",
-        "statement": "\\begin{lemma}[Basic properties of Minkowski sums and lower hulls]\n  \\label{lem:lch_minkowski_basic}\n  \n  \\uses{def:minkowski_sum, def:lower_convex_hull}\n  Let $A,B\\subset\\mathbb{R}^2$.\n  \\begin{enumerate}\n    \\item If $A\\subset A'$ and $B\\subset B'$, then $A+B\\subset A'+B'$.\n    \\item If $C,D$ are closed and convex, then $C+D$ is closed and convex.\n    \\item If $C,D$ are vertically downward closed, then $C+D$ is vertically downward closed.\n  \\end{enumerate}\n\\end{lemma}"
+        "statement": "\\begin{lemma}[Basic properties of Minkowski sums and lower hulls]\n  \\label{lem:lch_minkowski_basic}\n  \n  \\uses{def:minkowski_sum, def:lower_convex_hull}\n  \\lean{GhostConjecture.lch_minkowski_basic}\n  \\leanok\n  Let $A,B\\subset\\mathbb{R}^2$.\n  \\begin{enumerate}\n    \\item If $A\\subset A'$ and $B\\subset B'$, then $A+B\\subset A'+B'$.\n    \\item If $C,D$ are closed and convex, then $C+D$ is closed and convex.\n    \\item If $C,D$ are vertically downward closed, then $C+D$ is vertically downward closed.\n  \\end{enumerate}\n\\end{lemma}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/Geometry/LCHMinkowskiBasic.lean",
+        "name": "GhostConjecture.lch_minkowski_basic"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 112
+        "line": 120
       },
       "status": {
         "proof": "todo",
-        "statement": "todo"
+        "statement": "formalized"
       },
       "title": "Basic properties of Minkowski sums and lower hulls"
     },
@@ -341,7 +341,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 215
+        "line": 229
       },
       "status": {
         "proof": "todo",
@@ -375,7 +375,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 197
+        "line": 211
       },
       "status": {
         "proof": "todo",
@@ -408,7 +408,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 178
+        "line": 192
       },
       "status": {
         "proof": "todo",
@@ -440,7 +440,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 160
+        "line": 174
       },
       "status": {
         "proof": "todo",
@@ -464,19 +464,19 @@
       "label": "lem:support_minkowski",
       "latex": {
         "proof": "\\begin{proof}\n \n  \\uses{def:support_function_lower, def:minkowski_sum}\n  By definition,\n  \\[\n    h_{A+B}(\\lambda)=\\inf_{a\\in A,\\ b\\in B}\\big((a_y+b_y)+\\lambda(a_x+b_x)\\big)\n    =\\inf_{a\\in A,\\ b\\in B}\\big((a_y+\\lambda a_x)+(b_y+\\lambda b_x)\\big)\n    =h_A(\\lambda)+h_B(\\lambda).\n  \\]\n\\end{proof}",
-        "statement": "\\begin{lemma}[Support function of a Minkowski sum]\n  \\label{lem:support_minkowski}\n  \n  \\uses{def:support_function_lower, def:minkowski_sum}\n  For $A,B\\subset\\mathbb{R}^2$ and $\\lambda\\in\\mathbb{R}$,\n  \\[\n    h_{A+B}(\\lambda)=h_A(\\lambda)+h_B(\\lambda),\n  \\]\n  with the usual conventions for extended real addition.\n\\end{lemma}"
+        "statement": "\\begin{lemma}[Support function of a Minkowski sum]\n  \\label{lem:support_minkowski}\n  \n  \\uses{def:support_function_lower, def:minkowski_sum}\n  \\lean{GhostConjecture.supportFunctionalLower_minkowskiSum}\n  \\leanok\n  For $A,B\\subset\\mathbb{R}^2$ and $\\lambda\\in\\mathbb{R}$,\n  \\[\n    h_{A+B}(\\lambda)=h_A(\\lambda)+h_B(\\lambda),\n  \\]\n  with the usual conventions for extended real addition.\n\\end{lemma}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/SupportFunctionalMinkowskiSum.lean",
+        "name": "GhostConjecture.supportFunctionalLower_minkowskiSum"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 248
+        "line": 264
       },
       "status": {
-        "proof": "todo",
-        "statement": "todo"
+        "proof": "formalized",
+        "statement": "formalized"
       },
       "title": "Support function of a Minkowski sum"
     },
@@ -508,7 +508,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 281
+        "line": 301
       },
       "status": {
         "proof": "todo",
@@ -540,7 +540,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 307
+        "line": 327
       },
       "status": {
         "proof": "todo",
@@ -564,19 +564,19 @@
       "label": "lem:vp_coeff_mul_lower_bound",
       "latex": {
         "proof": "\\begin{proof}\n \n  \\uses{def:nonarch_valuation, lem:coeff_mul}\n  By \\Cref{lem:coeff_mul}, $(FG)_n=\\sum_{i=0}^n f_i g_{n-i}$.\n  Apply the ultrametric inequality iteratively:\n  \\[\n    v\\Big(\\sum_{i=0}^n f_i g_{n-i}\\Big)\\ \\ge\\ \\min_i v(f_i g_{n-i})\n    \\ =\\ \\min_i \\big(v(f_i)+v(g_{n-i})\\big).\n  \\]\n\\end{proof}",
-        "statement": "\\begin{lemma}[Valuation lower bound on convolution coefficients]\n  \\label{lem:vp_coeff_mul_lower_bound}\n  \n  \\uses{def:nonarch_valuation, lem:coeff_mul}\n  Let $(K,v)$ be a non-archimedean valued field and $F,G\\in K\\llbracket t\\rrbracket$.\n  Then for all $n\\ge 0$,\n  \\[\n    v\\big((FG)_n\\big)\\ \\ge\\ \\min_{0\\le i\\le n}\\big(v(f_i)+v(g_{n-i})\\big).\n  \\]\n\\end{lemma}"
+        "statement": "\\begin{lemma}[Valuation lower bound on convolution coefficients]\n  \\label{lem:vp_coeff_mul_lower_bound}\n  \n  \\uses{def:nonarch_valuation, lem:coeff_mul}\n  \\lean{GhostConjecture.vp_coeff_mul_lower_bound}\n  \\leanok\n  Let $(K,v)$ be a non-archimedean valued field and $F,G\\in K\\llbracket t\\rrbracket$.\n  Then for all $n\\ge 0$,\n  \\[\n    v\\big((FG)_n\\big)\\ \\ge\\ \\min_{0\\le i\\le n}\\big(v(f_i)+v(g_{n-i})\\big).\n  \\]\n\\end{lemma}"
       },
       "lean": {
-        "file": null,
-        "name": null
+        "file": "GhostConjecture/ValuationCoeffMul.lean",
+        "name": "GhostConjecture.vp_coeff_mul_lower_bound"
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 63
+        "line": 65
       },
       "status": {
         "proof": "todo",
-        "statement": "todo"
+        "statement": "formalized"
       },
       "title": "Valuation lower bound on convolution coefficients"
     },
@@ -609,7 +609,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 360
+        "line": 380
       },
       "status": {
         "proof": "todo",
@@ -643,7 +643,7 @@
       },
       "source": {
         "file": "GhostConjectureLean/blueprint/src/chapters/newton_polygon.tex",
-        "line": 390
+        "line": 410
       },
       "status": {
         "proof": "todo",
