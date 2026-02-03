@@ -216,6 +216,22 @@ def run_update(update_script: Path, label: str, lean_root: Path) -> None:
     subprocess.run(cmd, check=True)
 
 
+def record_failure(registry_path: Path, label: str) -> None:
+    registry = load_registry(registry_path)
+    nodes = registry.get("nodes")
+    if not isinstance(nodes, dict) or label not in nodes:
+        return
+    node = nodes[label]
+    failures = 0
+    if isinstance(node, dict):
+        failures = int(node.get("proof_failures", 0))
+        node["proof_failures"] = failures + 1
+        nodes[label] = node
+        registry["nodes"] = nodes
+        Path(registry_path).write_text(
+            json.dumps(registry, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run codex exec to formalize a proof and log the session."
@@ -293,12 +309,14 @@ def main() -> None:
 
     if result.returncode != 0:
         write_log(log_path, log_content)
+        record_failure(registry_path, args.label)
         raise RuntimeError(f"codex exec failed (code {result.returncode}); see log {log_path}")
 
     try:
         ok = parse_proof_ok(stdout)
     except ValueError:
         write_log(log_path, log_content)
+        record_failure(registry_path, args.label)
         raise
 
     log_content += f"\n## Parsed Output\nPROOF_OK: {'YES' if ok else 'NO'}\n"
@@ -306,6 +324,8 @@ def main() -> None:
 
     if ok:
         run_update(update_script, args.label, lean_root)
+    else:
+        record_failure(registry_path, args.label)
 
 
 if __name__ == "__main__":

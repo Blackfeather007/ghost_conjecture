@@ -70,7 +70,7 @@ def build_proof_dependency_edges(nodes: dict, candidates: List[str]) -> Dict[str
     return edges
 
 
-def select_independent_proof_candidates(nodes: dict) -> List[str]:
+def select_independent_proof_candidates(nodes: dict, max_proof_failures: int) -> List[str]:
     candidates: List[str] = []
     for label, node in nodes.items():
         if not node.get("has_proof", False):
@@ -81,6 +81,11 @@ def select_independent_proof_candidates(nodes: dict) -> List[str]:
         if not isinstance(lean_obj, dict) or not lean_obj.get("name"):
             continue
         if not proof_dependencies_formalized(nodes, label):
+            continue
+        failures = 0
+        if isinstance(node, dict):
+            failures = int(node.get("proof_failures", 0))
+        if failures > max_proof_failures:
             continue
         candidates.append(label)
 
@@ -204,6 +209,17 @@ def parse_args() -> argparse.Namespace:
         help="Which phase to run (default: auto)",
     )
     parser.add_argument(
+        "--max-proof-failures",
+        type=int,
+        default=0,
+        help="Skip proofs with failures greater than this count",
+    )
+    parser.add_argument(
+        "--loop-proofs",
+        action="store_true",
+        help="Repeat proof runs until all remaining proofs exceed max failures",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Only list tasks and skip running codex",
@@ -219,7 +235,7 @@ def main() -> None:
         raise ValueError("Invalid registry format: missing nodes")
 
     statement_labels = select_statement_candidates(nodes)
-    proof_labels = select_independent_proof_candidates(nodes)
+    proof_labels = select_independent_proof_candidates(nodes, args.max_proof_failures)
 
     if args.mode == "auto":
         mode = "statement" if statement_labels else "proof"
@@ -245,6 +261,9 @@ def main() -> None:
         print(f"- {label}")
     print(f"Max concurrency: {args.max_concurrency}", flush=True)
 
+    statement_results: List[Tuple[str, int]] = []
+    proof_results: List[Tuple[str, int]] = []
+
     statement_results = run_tasks(
         statement_labels,
         Path(args.statement_runner),
@@ -252,13 +271,38 @@ def main() -> None:
         args.max_concurrency,
         args.dry_run,
     )
-    proof_results = run_tasks(
-        proof_labels,
-        Path(args.proof_runner),
-        Path(args.lean_root),
-        args.max_concurrency,
-        args.dry_run,
-    )
+
+    if mode == "proof" and args.loop_proofs and not args.dry_run:
+        loop_round = 1
+        while True:
+            registry = load_registry(Path(args.registry))
+            nodes = registry.get("nodes") if isinstance(registry, dict) else None
+            if not isinstance(nodes, dict):
+                break
+            proof_labels = select_independent_proof_candidates(nodes, args.max_proof_failures)
+            if args.max_count is not None:
+                proof_labels = proof_labels[: args.max_count]
+            if not proof_labels:
+                break
+            print(f"\nProof loop round {loop_round}", flush=True)
+            proof_results.extend(
+                run_tasks(
+                    proof_labels,
+                    Path(args.proof_runner),
+                    Path(args.lean_root),
+                    args.max_concurrency,
+                    args.dry_run,
+                )
+            )
+            loop_round += 1
+    else:
+        proof_results = run_tasks(
+            proof_labels,
+            Path(args.proof_runner),
+            Path(args.lean_root),
+            args.max_concurrency,
+            args.dry_run,
+        )
 
     statement_summary = summarize_results(statement_results)
     proof_summary = summarize_results(proof_results)

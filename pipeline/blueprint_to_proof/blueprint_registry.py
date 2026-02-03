@@ -28,6 +28,7 @@ PROOF_REQUIRED_ENVS = {
 
 DEFAULT_STATUS = {"statement": "todo", "proof": "todo"}
 FORMALIZED_STATUS = "formalized"
+DEFAULT_PROOF_FAILURES = 0
 
 
 @dataclass
@@ -191,6 +192,7 @@ def parse_blueprint_file(path: Path) -> List[Dict[str, object]]:
                 },
                 "lean": {"file": None, "name": None},
                 "has_proof": proof_block is not None,
+                "proof_failures": DEFAULT_PROOF_FAILURES,
                 "source": {
                     "file": str(path),
                     "line": block.start_line,
@@ -222,6 +224,7 @@ def merge_nodes(
         prior = existing_nodes.get(label, {}) if isinstance(existing_nodes, dict) else {}
         merged_node = dict(node)
         merged_node["status"] = prior.get("status", DEFAULT_STATUS)
+        merged_node["proof_failures"] = prior.get("proof_failures", DEFAULT_PROOF_FAILURES)
         prior_lean = prior.get("lean") if isinstance(prior, dict) else None
         if prior_lean and merged_node.get("lean") == {"file": None, "name": None}:
             merged_node["lean"] = prior_lean
@@ -340,6 +343,52 @@ def locate_label_in_file(path: Path, label: str) -> EnvBlock:
         if extract_label(block.content) == label:
             return block
     raise ValueError(f"Label {label} not found in {path}")
+
+
+def locate_label_and_proof_in_file(path: Path, label: str) -> tuple[EnvBlock, EnvBlock | None]:
+    text = path.read_text(encoding="utf-8")
+    blocks = find_top_level_blocks(text)
+    for i, block in enumerate(blocks):
+        if block.env == "proof":
+            continue
+        if extract_label(block.content) == label:
+            proof_block = None
+            if i + 1 < len(blocks) and blocks[i + 1].env == "proof":
+                proof_block = blocks[i + 1]
+            return block, proof_block
+    raise ValueError(f"Label {label} not found in {path}")
+
+
+def update_proof_block_with_leanok(block_text: str) -> str:
+    if "\\leanok" in block_text:
+        return block_text
+    lines = block_text.splitlines()
+    insert_after = None
+    for idx, line in enumerate(lines):
+        if "\\uses{" in line:
+            insert_after = idx
+    if insert_after is None:
+        for idx, line in enumerate(lines):
+            if "\\begin{proof" in line:
+                insert_after = idx
+                break
+    if insert_after is None:
+        insert_after = 0
+    indent = lines[insert_after][: len(lines[insert_after]) - len(lines[insert_after].lstrip())] if lines else "  "
+    lines.insert(insert_after + 1, f"{indent}\\leanok")
+    return "\n".join(lines)
+
+
+def update_proof_block_in_file(path: Path, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    _, proof_block = locate_label_and_proof_in_file(path, label)
+    if proof_block is None:
+        raise ValueError(f"No proof block found for {label} in {path}")
+    new_block = update_proof_block_with_leanok(proof_block.content)
+    if new_block == proof_block.content:
+        return
+    new_text = text[: proof_block.start] + new_block + text[proof_block.end :]
+    path.write_text(new_text, encoding="utf-8")
 
 
 def update_blueprint_label(blueprint_dir: Path, label: str, lean_name: str, verbose: bool) -> Path:
@@ -496,6 +545,7 @@ def main() -> None:
             if not existing_name:
                 raise ValueError("Proof update requires existing lean.name in registry.")
             tex_file = update_blueprint_label(blueprint_dir, args.label, existing_name, args.verbose)
+            update_proof_block_in_file(tex_file, args.label)
             updated_block = locate_label_in_file(tex_file, args.label)
             status["proof"] = FORMALIZED_STATUS
             node["source"] = {"file": str(tex_file), "line": updated_block.start_line}
