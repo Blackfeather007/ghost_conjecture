@@ -21,7 +21,7 @@ jobs:
           submodules: recursive
       - uses: leanprover/lean-action@v1
         with:
-          lake_package_directory: GhostConjectureLean
+          lake-package-directory: GhostConjectureLean
       - uses: leanprover-community/docgen-action@v1
         with:
           lake_package_directory: GhostConjectureLean
