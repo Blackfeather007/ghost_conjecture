@@ -51,16 +51,36 @@ Each `node` contains:
 
 ## How to use
 
+### Run Codex and update the registry
+```bash
+python pipeline/blueprint_to_proof/statement_formalize_run.py \
+  --label def:fps_ring \
+  --lean-root GhostConjectureLean
+```
+
+### Generate a statement formalization prompt (dry run)
+```bash
+python pipeline/blueprint_to_proof/statement_formalize_run.py \
+  --label def:fps_ring \
+  --lean-root GhostConjectureLean \
+  --dry-run
+```
+
+Logs are written to `output/blueprint_to_proof/statement_formalization_log` with a filename based on the label and a timestamp.
+The script feeds the populated prompt to `codex exec` via stdin. Override with `--codex-cmd` if needed; it expects a command list (e.g. `--codex-cmd codex exec --full-auto --json -C GhostConjectureLean`).
+The command list is used exactly as provided.
+The agent must return the final two lines in the exact `LEAN_FILE:` / `LEAN_NAME:` format specified in the prompt.
+
 ### Initialize or refresh the registry
 ```bash
-python pipeline/blueprint_to_proof/blueprint_to_proof.py init \
+python pipeline/blueprint_to_proof/blueprint_registry.py init \
   --blueprint-dir GhostConjectureLean/blueprint/src/chapters \
   --output output/blueprint_to_proof/blueprint_nodes.json
 ```
 
 ### Update a formalized statement
 ```bash
-python pipeline/blueprint_to_proof/blueprint_to_proof.py update \
+python pipeline/blueprint_to_proof/blueprint_registry.py update \
   --label def:fps_ring \
   --lean-file GhostConjectureLean/GhostConjecture/Basic.lean \
   --lean-name GhostConjecture.Basic.fpsRing \

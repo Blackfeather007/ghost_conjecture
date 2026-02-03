@@ -253,7 +253,7 @@ def build_registry(blueprint_dir: Path, output_path: Path, verbose: bool) -> Non
         "blueprint_dir": str(blueprint_dir),
         "files": [str(p) for p in tex_files],
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "script": "pipeline/blueprint_to_proof/blueprint_to_proof.py",
+        "script": "pipeline/blueprint_to_proof/blueprint_registry.py",
     }
     if "updated_at" in existing_metadata:
         metadata["updated_at"] = existing_metadata["updated_at"]
