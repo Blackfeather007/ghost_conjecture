@@ -1,0 +1,361 @@
+\documentclass[12pt]{amsart}
+\usepackage{amsfonts}
+\usepackage{fullpage,multirow, amsmath, amsthm,amsfonts,amssymb,stmaryrd, mathrsfs,hhline}
+\usepackage{mathdots}
+\usepackage{pgf,tikz}
+\usepackage{tikz-cd}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\usetikzlibrary[patterns]
+\usetikzlibrary{matrix,decorations.pathreplacing,calc}
+\usepackage{hyperref}
+
+%\usepackage{color}
+%\usepackage[pdftex]{color}
+\usepackage[all]{xy}
+
+\newcommand{\liang}[1]{{\color{blue} \sf $\clubsuit\clubsuit\clubsuit$ Liang: [#1]}}
+
+\newcommand{\bin}[1]{{\color{red} \sf $\heartsuit\heartsuit\heartsuit$ Bin: [#1]}}
+\newcommand{\ruochuan}[1]{{\color{red} \sf $\heartsuit\heartsuit\heartsuit$ Ruochuan: [#1]}}
+
+\newcommand{\nha}[1]{{\color{green} \sf $\spadesuit\spadesuit\spadesuit$ Nha: [#1]}}
+
+% tikz command
+
+\tikzset{ 1
+table/.style={
+  matrix of math nodes,
+  row sep=-\pgflinewidth,
+  column sep=-\pgflinewidth,
+  nodes={rectangle,text width=3em,align=center},
+  text depth=1.25ex,
+  text height=2.5ex,
+  nodes in empty cells,
+  left delimiter=[,
+  right delimiter={]},
+  ampersand replacement=\&
+}
+}
+\pgfkeys{tikz/mymatrixenv/.style={decoration=brace,every left delimiter/.style={xshift=3pt},every right delimiter/.style={xshift=-3pt}}}
+\pgfkeys{tikz/mymatrix/.style={matrix of math nodes,left delimiter=[,right delimiter={]},inner sep=2pt,column sep=1em,row sep=0.5em,nodes={inner sep=0pt}}}
+\pgfkeys{tikz/mymatrixbrace/.style={decorate,thick}}
+\newcommand\mymatrixbraceoffseth{0.5em}
+\newcommand\mymatrixbraceoffsetv{0.2em}
+
+\newcommand*\mymatrixbraceright[4][m]{
+    \draw[mymatrixbrace] ($(#1.north west)!(#1-#3-1.south west)!(#1.south west)-(\mymatrixbraceoffseth,0)$)
+        -- node[left=2pt] {#4} 
+        ($(#1.north west)!(#1-#2-1.north west)!(#1.south west)-(\mymatrixbraceoffseth,0)$);
+}
+\newcommand*\mymatrixbraceleft[4][m]{
+    \draw[mymatrixbrace] ($(#1.north east)!(#1-#2-1.north east)!(#1.south east)+(\mymatrixbraceoffseth,0)$)
+        -- node[right=2pt] {#4} 
+        ($(#1.north east)!(#1-#3-1.south east)!(#1.south east)+(\mymatrixbraceoffseth,0)$);
+}
+\newcommand*\mymatrixbracetop[4][m]{
+    \draw[mymatrixbrace] ($(#1.north west)!(#1-1-#2.north west)!(#1.north east)+(0,\mymatrixbraceoffsetv)$)
+        -- node[above=2pt] {#4} 
+        ($(#1.north west)!(#1-1-#3.north east)!(#1.north east)+(0,\mymatrixbraceoffsetv)$);
+}
+\newcommand*\mymatrixbracebottom[4][m]{
+    \draw[mymatrixbrace] ($(#1.south west)!(#1-1-#3.south east)!(#1.south east)-(0,\mymatrixbraceoffsetv)$)
+        -- node[below=2pt] {#4} 
+        ($(#1.south west)!(#1-1-#2.south west)!(#1.south east)-(0,\mymatrixbraceoffsetv)$);
+}
+
+
+
+\newtheorem{thm}{Theorem}
+
+
+
+\newtheorem{theorem}[subsection]{Theorem}
+\newtheorem{keylemma}[subsection]{Key Lemma}
+\newtheorem{lemma}[subsection]{Lemma}
+\newtheorem{lemmanotation}[subsection]{Lemma-Notation}
+\newtheorem{corollary}[subsection]{Corollary}
+\newtheorem{conjecture}[subsection]{Conjecture}
+\newtheorem{caveat}[subsection]{Caveat}
+\newtheorem{proposition}[subsection]{Proposition}
+\newtheorem{definition-lemma}[subsection]{Definition-Lemma}
+\newtheorem{definition-proposition}[subsection]{Definition-Proposition}
+\theoremstyle{definition}
+\newtheorem{caution}[subsection]{Caution}
+\newtheorem{construction}[subsection]{Construction}
+\newtheorem{definition}[subsection]{Definition}
+\newtheorem{hypothesis}[subsection]{Hypothesis}
+\newtheorem{statement}[subsection]{Statement}
+\newtheorem{example}[subsection]{Example}
+\newtheorem{question}[subsection]{Question}
+\newtheorem{remark}[subsection]{Remark}
+\newtheorem{convention}[subsection]{Convention}
+\newtheorem{notation}[subsection]{Notation}
+\newtheorem{graphs}[subsection]{Graph}
+
+
+
+
+\renewcommand{\thethm}{\Alph{thm}}
+\numberwithin{equation}{subsection}
+
+
+\makeatletter
+\newcommand{\fakephantomsection}{%
+  \Hy@MakeCurrentHref{\@currenvir.\the\Hy@linkcounter}
+  \Hy@raisedlink{\hyper@anchorstart{\@currentHref}\hyper@anchorend}%
+}
+\makeatother
+
+\def\calA{\mathcal{A}}
+\def\calB{\mathcal{B}}
+\def\calC{\mathcal{C}}
+\def\calD{\mathcal{D}}
+\def\calE{\mathcal{E}}
+\def\calF{\mathcal{F}}
+\def\calH{\mathcal{H}}
+\def\calL{\mathcal{L}}
+\def\calM{\mathcal{M}}
+\def\calO{\mathcal{O}}
+\def\calR{\mathcal{R}}
+\def\calS{\mathcal{S}}
+\def\calV{\mathcal{V}}
+\def\calW{\mathcal{W}}
+\def\calX{\mathcal{X}}
+\def\calZ{\mathcal{Z}}
+\def\gothA{\mathfrak{A}}
+\def\gothC{\mathfrak{C}}
+\def\gothD{\mathfrak{D}}
+\def\gothE{\mathfrak{E}}
+\def\gothm{\mathfrak{m}}
+\def\gotho{\mathfrak{o}}
+\def\gothp{\mathfrak{p}}
+\def\gothM{\mathfrak{M}}
+\def\gothN{\mathfrak{N}}
+\def\gothP{\mathfrak{P}}
+\def\gothQ{\mathfrak{Q}}
+\def\gothR{\mathfrak{R}}
+\def\gothS{\mathfrak{S}}
+\def\gothH{\mathfrak{H}}
+\def\gothT{\mathfrak{T}}
+\def\gothU{\mathfrak{U}}
+\def\gothV{\mathfrak{V}}
+\def\gothX{\mathfrak{X}}
+\def\gothZ{\mathfrak{Z}}
+\def\bfA{\mathbf{A}}
+\def\bfB{\mathbf{B}}
+\def\AAA{\mathbb{A}}
+\def\BB{\mathbb{B}}
+\def\CC{\mathbb{C}}
+\def\FF{\mathbb{F}}
+\def\GG{\mathbb{G}}
+\def\HH{\mathbb{H}}
+\def\II{\mathbb{I}}
+\def\NN{\mathbb{N}}
+\def\PP{\mathbb{P}}
+\def\QQ{\mathbb{Q}}
+\def\RR{\mathbb{R}}
+\def\TT{\mathbb{T}}
+\def\XX{\mathbb{X}}
+\def\ZZ{\mathbb{Z}}
+\def\bfa{\mathbf{a}}
+\def\bfb{\mathbf{b}}
+\def\bfe{\mathbf{e}}
+\def\bff{\mathbf{f}}
+\def\bfg{\mathbf{g}}
+\def\bfk{\mathbf{k}}
+\def\bfm{\mathbf{m}}
+\def\bfv{\mathbf{v}}
+\def\bfw{\mathbf{w}}
+\def\bfx{\mathbf{x}}
+\def\bfD{\mathbf{D}}
+\def\bfL{\mathbf{L}}
+\def\bfT{\mathbf{T}}
+\def\bfC{\mathbf{C}}
+\def\bfE{\mathbf{E}}
+\def\bfM{\mathbf{M}}
+\def\bfP{\mathbf{P}}
+\def\bfR{\mathbf{R}}
+\def\rmm{\mathrm{m}}
+\def\rmn{\mathrm{n}}
+\def\rmt{\mathrm{t}}
+\def\rmA{\mathrm{A}}
+\def\rmB{\mathrm{B}}
+\def\rmC{\mathrm{C}}
+\def\rmD{\mathrm{D}}
+\def\rmG{\mathrm{G}}
+\def\rmH{\mathrm{H}}
+\def\rmI{\mathrm{I}}
+\def\rmK{\mathrm{K}}
+\def\rmL{\mathrm{L}}
+\def\rmM{\mathrm{M}}
+\def\rmP{\mathrm{P}}
+\def\rmU{\mathrm{U}}
+\def\rmR{\mathrm{R}}
+\def\rmT{\mathrm{T}}
+\def\rmY{\mathrm{Y}}
+\def\rmZ{\mathrm{Z}}
+\def\scrB{\mathscr{B}}
+\def\scrC{\mathscr{C}}
+\def\i{\mathbf{i}}
+\def\j{\mathbf{j}}
+\def\k{\mathbf{k}}
+\def\rmS{\mathrm{S}}
+\def\sfS{\mathsf{S}}
+\def\frakf{\mathfrak{f}}
+
+\newcommand{\Proj}{\mathrm{Proj}}
+\newcommand{\proj}{\mathrm{proj}}
+\DeclareMathOperator{\Cone}{Cone}
+\DeclareMathOperator{\Coker}{Coker}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\HT}{HT}
+\DeclareMathOperator{\HP}{HP}
+\DeclareMathOperator{\Lie}{Lie}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Max}{Max}
+\DeclareMathOperator{\NP}{NP}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Spf}{Spf}
+\DeclareMathOperator{\Spm}{Spm}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Tor}{Tor}
+\DeclareMathOperator{\Dig}{Dig}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Sat}{\mathrm{Sat}}
+\newcommand{\unit}{\mathrm{unit}}
+\newcommand{\AL}{\mathrm{AL}}
+\newcommand{\an}{\mathrm{an}}
+\newcommand{\can}{\mathrm{can}}
+\newcommand{\cont}{\mathrm{cont}}
+\newcommand{\cycl}{\mathrm{cycl}}
+\newcommand{\dR}{\mathrm{dR}}
+\newcommand{\dual}{\vee}
+\newcommand{\et}{\mathrm{\acute{e}t}}
+\newcommand{\Fil}{\mathrm{Fil}}
+\newcommand{\Fr}{\mathrm{Fr}}
+\newcommand{\Hol}{\mathrm{Hol}}
+\newcommand{\HOL}{\mathrm{HOL}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\new}{\mathrm{new}}
+\newcommand{\old}{\textrm{-}\mathrm{old}}
+\newcommand{\Iw}{\mathrm{Iw}}
+\renewcommand{\det}{\mathrm{det}}
+\newcommand{\unr}{\mathrm{ur}}
+\newcommand{\ord}{\mathrm{ord}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\Nm}{\mathrm{Nm}}
+\newcommand{\pr}{\mathrm{pr}}
+\newcommand{\corank}{\mathrm{corank}}
+\newcommand{\Qp}{\QQ_p}
+\newcommand{\rig}{\mathrm{rig}}
+\newcommand{\Tate}{\mathrm{Tate}}
+\newcommand{\tame}{\mathrm{tame}}
+\newcommand{\tw}{\mathrm{tw}}
+\newcommand{\wt}{\mathrm{wt}}
+\newcommand{\WT}{\mathrm{WT}}
+\newcommand{\Zp}{\ZZ_p}
+\newcommand{\SL}{\mathrm{SL}}
+\newcommand{\cl}{\mathrm{cl}}
+\newcommand{\inte}{\mathrm{int}}
+\newcommand{\Err}{\mathrm{Err}}
+\newcommand{\lan}{\mathrm{l.an}}
+\newcommand{\alg}{\mathrm{alg}}
+\newcommand{\naive}{\mathrm{naive}}
+\newcommand{\LP}{\mathrm{LP}}
+\newcommand{\Sh}{\mathrm{Sh}}
+\newcommand{\ur}{\mathrm{ur}}
+\newcommand{\Frob}{\mathrm{Frob}}
+\newcommand{\univ}{\mathrm{univ}}
+\newcommand{\JH}{\mathrm{JH}}
+\newcommand{\Mult}{\mathrm{Mult}}
+\newcommand{\power}{\mathrm{power}}
+\newcommand{\nS}{\mathrm{nS}}
+\newcommand{\lead}{\mathrm{lead}}
+\newcommand{\midd}{\mathrm{mid}}
+\newcommand{\even}{\mathrm{even}}
+\newcommand{\odd}{\mathrm{odd}}
+\newcommand{\defect}{\mathrm{defect}}
+\newcommand{\Mah}{\mathrm{Mah}}
+
+\DeclareMathOperator{\length}{length}
+\DeclareMathOperator{\Char}{Char}
+\DeclareMathOperator{\Spa}{Spa}
+\DeclareMathOperator{\Spc}{Spc}
+\DeclareMathOperator{\Diag}{Diag}
+\DeclareMathOperator{\Eig}{Eig}
+\DeclareMathOperator{\Ind}{Ind}
+\newcommand{\Matrix}[4]{{\big(\begin{smallmatrix}#1&#2\\#3& #4\end{smallmatrix} \big)}}
+\newcommand{\MATRIX}[4]{{\begin{pmatrix}#1&#2\\#3& #4\end{pmatrix}}}
+
+\renewcommand{\subjclassname}{  \textup{2010} Mathematics Subject Classification}
+\begin{document}
+
+\section{Preparations}
+
+$\bullet$ Give the definition of Newton polygon for a power series for a formal power series in one variable, with values in a non-archimedean field. (Use AI to generate needed background knowledge.)
+
+$\bullet$ Give lemma to show that Newton polygon of the product of two power series is the Minkowski sum of the Newton polygons of the two power series.
+
+\begin{proposition}
+    Let $F(t) = \sum_{n \geq 0} f_n t^n$ and $G(t) = \sum_{n \geq 0} g_n t^n$ be two power series in $\QQ_p\llbracket t\rrbracket$. Then the Newton polygon of $F(t)G(t)$ is the Minkowski sum of the Newton polygons of $F(t)$ and $G(t)$.
+\end{proposition}
+
+\section{Formulation of the local ghost series}
+
+$\bullet$ Input data: $a \in \{1, \dots, p-4\}$. Fixed throuhgout.
+
+$\bullet$ Notation from the paper $\Delta = \FF_p^\times$. Also we need the Teichmüller character $\omega$ of $\FF_p^\times$ to $\ZZ_p^\times$.
+
+$\bullet$ We have an equivalent pair of definitions:
+
+(1) $\varepsilon = \omega^{-s_\varepsilon} \times \omega^{a+s_\varepsilon}$ of $\Delta^2$ (relevant to $\bar \rho$). (no need to explain what $\bar \rho$ is.)
+
+(2) A variable $s_\varepsilon \in \ZZ/(p-1)\ZZ$, usually represented by an element in $\{0, 1, \dots, p-2\}$.
+
+
+$\bullet$ Define $k_\varepsilon \in \{2, \dots, p\}$ to be an integer such that $k_\varepsilon \equiv a+2s_\varepsilon+2 \bmod{p-1}$. (See notation 2.83)
+
+$\bullet$ (Proposition 4.5) Turn the main result of this proposition into a definition of these dimensions.  (DO NOT PROVE IT.)
+
+Note also the special case $k = k_\varepsilon + k_\bullet (p-1)$ when $k \equiv k_\varepsilon \bmod{(p-1)}$. there is an abbreviation $d_k^\Iw(\tilde \varepsilon_1)$ for $d_k^\Iw(\varepsilon\cdot (1\times \omega^{2-k}))$ (where $\varepsilon_1$ means the first factor of $\varepsilon$).
+
+$\bullet$ defined $\delta_\varepsilon$ is Notation 4.6.
+
+$\bullet$ Prove Corollary 4.8 (which is trivial).
+
+$\bullet$ In \S 4.10, ignore (4.11.1), but define $t_1^{(\varepsilon)}$ and $t_2^{(\varepsilon)}$ as in Paragraph 4.14, yet note that $t_i$ depends on $a$ (so need to be careful when writing LEAN.)
+
+$\bullet$ Proposition 4.15 is taken as DEFINITION. Do not prove it.
+
+$\bullet$ Now, turn to Definition 2.84 of ghost series. The subscript $\widetilde \rmH$ can be ignored, but only record the integer $a$ fixed at the beginning. Here $\varepsilon$ means $\varepsilon_1 \times \varepsilon_2 = \omega^{-s_\varepsilon} \times \omega^{a+s_\varepsilon}$ as above.
+
+Also verify (2.84.3) and (2.84.4).
+
+$\bullet$ Need Notation 4.22.
+
+$\bullet$ We need some definition of degree of basis elements (without knowing what they are, just taken as symbols), this is in Notation 3.17(2)(3).
+
+$\bullet$ For Proposition 4.23, this is a medium size proof (a good size for AI to handle).  (I am pretty sure it is correct; no need to verify its correctness, but maybe a good exercise for AI.)
+
+$\bullet$ Please also formalize the statement in Remark 4.27.
+
+$\bullet$ No need to formalize Corollary 4.28.
+
+$\bullet$ Give Notation 4.32. (Note that this is the same as removing the factors of ghost series at the weights in $k$.
+
+$\bullet$ Propositions 4.34, 4.36-38 are once again  medium size proofs (a good size for AI to handle).  (I am pretty sure they are correct; no need to verify its correctness, but maybe  good exercises for AI.)
+
+$\bullet$ Define Notation 4.63, and prove Proposition 4.64.
+
+\section{More difficult results on ghost series}
+Formalize everything in section 5.
+
+\end{document}
+
