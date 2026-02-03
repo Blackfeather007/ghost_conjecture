@@ -6,7 +6,7 @@ on:
       - 'main'
       - 'master'
     paths:
-      - 'lean-toolchain'
+      - 'GhostConjectureLean/lean-toolchain'
 
 jobs:
   lean-release-tag:

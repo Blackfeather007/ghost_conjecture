@@ -1,0 +1,3 @@
+[submodule "GhostConjectureLean"]
+	path = GhostConjectureLean
+	url = /tmp/GhostConjectureLean_repo

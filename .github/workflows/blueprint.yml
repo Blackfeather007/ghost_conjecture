@@ -31,32 +31,35 @@ jobs:
         run: curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
 
       - name: Get Mathlib cache
+        working-directory: GhostConjectureLean
         run: ~/.elan/bin/lake exe cache get || true
 
       - name: Build project
+        working-directory: GhostConjectureLean
         run: ~/.elan/bin/lake build GhostConjecture
 
       - name: Cache API docs
         uses: actions/cache@v4
         with:
           path: |
-            .lake/build/doc/Aesop
-            .lake/build/doc/Batteries
-            .lake/build/doc/find
-            .lake/build/doc/Init
-            .lake/build/doc/Lake
-            .lake/build/doc/Lean
-            .lake/build/doc/Mathlib
-            .lake/build/doc/Std
-          key: Docs-${{ hashFiles('lake-manifest.json') }}
+            GhostConjectureLean/.lake/build/doc/Aesop
+            GhostConjectureLean/.lake/build/doc/Batteries
+            GhostConjectureLean/.lake/build/doc/find
+            GhostConjectureLean/.lake/build/doc/Init
+            GhostConjectureLean/.lake/build/doc/Lake
+            GhostConjectureLean/.lake/build/doc/Lean
+            GhostConjectureLean/.lake/build/doc/Mathlib
+            GhostConjectureLean/.lake/build/doc/Std
+          key: Docs-${{ hashFiles('GhostConjectureLean/lake-manifest.json') }}
 
       - name: Build project API documentation
+        working-directory: GhostConjectureLean
         run: ~/.elan/bin/lake -R -Kenv=dev build GhostConjecture:docs
       
       - name: Check for `home_page` folder # this is meant to detect a Jekyll-based website
         id: check_home_page
         run: |
-          if [ -d home_page ]; then
+          if [ -d GhostConjectureLean/home_page ]; then
             echo "The 'home_page' folder exists in the repository."
             echo "HOME_PAGE_EXISTS=true" >> $GITHUB_ENV
           else
@@ -79,6 +82,7 @@ jobs:
             pip install --upgrade pip requests wheel
             CFLAGS="-I/usr/include/graphviz" LDFLAGS="-L/usr/lib/graphviz" pip install pygraphviz
             pip install leanblueprint
+            cd GhostConjectureLean
             leanblueprint pdf
             mkdir -p home_page
             cp blueprint/print/print.pdf home_page/blueprint.pdf
@@ -87,26 +91,27 @@ jobs:
 
       - name: Check declarations mentioned in the blueprint exist in Lean code
         run: |
+            cd GhostConjectureLean
             ~/.elan/bin/lake exe checkdecls blueprint/lean_decls
 
       - name: Copy API documentation to `home_page/docs`
-        run: cp -r .lake/build/doc home_page/docs
+        run: cp -r GhostConjectureLean/.lake/build/doc GhostConjectureLean/home_page/docs
 
       - name: Remove unnecessary lake files from documentation in `home_page/docs`
         run: |
-          find home_page/docs -name "*.trace" -delete
-          find home_page/docs -name "*.hash" -delete
+          find GhostConjectureLean/home_page/docs -name "*.trace" -delete
+          find GhostConjectureLean/home_page/docs -name "*.hash" -delete
 
       - name: Bundle dependencies
         uses: ruby/setup-ruby@v1
         with:
-          working-directory: home_page
+          working-directory: GhostConjectureLean/home_page
           ruby-version: "3.0"  # Specify Ruby version
           bundler-cache: true  # Enable caching for bundler
 
       - name: Build website using Jekyll
         if: env.HOME_PAGE_EXISTS == 'true'
-        working-directory: home_page
+        working-directory: GhostConjectureLean/home_page
         env:
           JEKYLL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: JEKYLL_ENV=production bundle exec jekyll build  # Note this will also copy the blueprint and API doc into home_page/_site
@@ -114,12 +119,12 @@ jobs:
       - name: "Upload website (API documentation, blueprint and any home page)"
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ env.HOME_PAGE_EXISTS == 'true' && 'home_page/_site' || 'home_page/' }}
+          path: ${{ env.HOME_PAGE_EXISTS == 'true' && 'GhostConjectureLean/home_page/_site' || 'GhostConjectureLean/home_page/' }}
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
       - name: Make sure the API documentation cache works
-        run: mv home_page/docs .lake/build/doc
+        run: mv GhostConjectureLean/home_page/docs GhostConjectureLean/.lake/build/doc
      
