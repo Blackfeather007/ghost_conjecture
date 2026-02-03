@@ -398,20 +398,24 @@ def parse_args() -> argparse.Namespace:
         help="Print parsing progress",
     )
 
-    update_parser = subparsers.add_parser("update", help="Mark a statement as formalized.")
+    update_parser = subparsers.add_parser("update", help="Mark a statement or proof as formalized.")
     update_parser.add_argument(
         "--label",
         required=True,
         help="Blueprint label to update",
     )
     update_parser.add_argument(
+        "--target",
+        choices=("statement", "proof"),
+        default="statement",
+        help="Which part to mark formalized (default: statement)",
+    )
+    update_parser.add_argument(
         "--lean-file",
-        required=True,
         help="Path to the Lean file (absolute or relative to --lean-root)",
     )
     update_parser.add_argument(
         "--lean-name",
-        required=True,
         help="Fully qualified Lean name",
     )
     update_parser.add_argument(
@@ -455,7 +459,7 @@ def main() -> None:
         blueprint_dir = Path(args.blueprint_dir)
         output_path = Path(args.output)
         lean_root = Path(args.lean_root)
-        lean_file = Path(args.lean_file)
+        lean_file = Path(args.lean_file) if args.lean_file else None
         lean_name = args.lean_name
 
         if not blueprint_dir.exists():
@@ -470,16 +474,33 @@ def main() -> None:
         if not isinstance(nodes, dict) or args.label not in nodes:
             raise ValueError(f"Label {args.label} not found in registry. Run init to refresh.")
 
-        tex_file = update_blueprint_label(blueprint_dir, args.label, lean_name, args.verbose)
-        updated_block = locate_label_in_file(tex_file, args.label)
-
-        rel_path = resolve_lean_file(lean_root, lean_file)
         node = nodes[args.label]
         status = node.get("status", dict(DEFAULT_STATUS))
-        status["statement"] = FORMALIZED_STATUS
+
+        if args.target == "statement":
+            if not lean_file or not lean_name:
+                raise ValueError("--lean-file and --lean-name are required for statement updates.")
+            tex_file = update_blueprint_label(blueprint_dir, args.label, lean_name, args.verbose)
+            updated_block = locate_label_in_file(tex_file, args.label)
+            rel_path = resolve_lean_file(lean_root, lean_file)
+            status["statement"] = FORMALIZED_STATUS
+            if not node.get("has_proof", False):
+                status["proof"] = FORMALIZED_STATUS
+            node["lean"] = {"file": rel_path, "name": lean_name}
+            node["source"] = {"file": str(tex_file), "line": updated_block.start_line}
+        else:
+            existing_lean = node.get("lean", {})
+            existing_name = None
+            if isinstance(existing_lean, dict):
+                existing_name = existing_lean.get("name")
+            if not existing_name:
+                raise ValueError("Proof update requires existing lean.name in registry.")
+            tex_file = update_blueprint_label(blueprint_dir, args.label, existing_name, args.verbose)
+            updated_block = locate_label_in_file(tex_file, args.label)
+            status["proof"] = FORMALIZED_STATUS
+            node["source"] = {"file": str(tex_file), "line": updated_block.start_line}
+
         node["status"] = status
-        node["lean"] = {"file": rel_path, "name": lean_name}
-        node["source"] = {"file": str(tex_file), "line": updated_block.start_line}
         nodes[args.label] = node
         data["nodes"] = nodes
         metadata = data.get("metadata", {})

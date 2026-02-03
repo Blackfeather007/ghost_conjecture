@@ -17,6 +17,7 @@ DEFAULT_TEMPLATE = Path("pipeline/blueprint_to_proof/proof_formalize_prompt.md")
 DEFAULT_LEAN_ROOT = Path("GhostConjectureLean")
 DEFAULT_LOG_DIR = Path("output/blueprint_to_proof/proof_formalization_log")
 DEFAULT_CODEX_CMD = ["codex", "exec", "--full-auto", "--json"]
+DEFAULT_UPDATE_SCRIPT = Path("pipeline/blueprint_to_proof/blueprint_registry.py")
 
 
 def safe_filename(label: str) -> str:
@@ -150,6 +151,71 @@ def write_log(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
+def extract_text_from_json(payload: object) -> str:
+    if isinstance(payload, str):
+        return payload
+    if isinstance(payload, list):
+        return "\n".join(extract_text_from_json(item) for item in payload)
+    if isinstance(payload, dict):
+        for key in ("message", "output", "content", "text", "stdout"):
+            if key in payload:
+                return extract_text_from_json(payload[key])
+        return "\n".join(extract_text_from_json(v) for v in payload.values())
+    return str(payload)
+
+
+def extract_text_from_codex_output(output: str) -> str:
+    lines = [line for line in output.splitlines() if line.strip()]
+    if not lines:
+        return output
+
+    messages: List[str] = []
+    for line in lines:
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, dict):
+            continue
+        item = event.get("item")
+        if isinstance(item, dict) and item.get("type") == "agent_message":
+            text = item.get("text")
+            if isinstance(text, str):
+                messages.append(text)
+
+    if messages:
+        return messages[-1]
+
+    try:
+        parsed = json.loads(output)
+        return extract_text_from_json(parsed)
+    except json.JSONDecodeError:
+        return output
+
+
+def parse_proof_ok(output: str) -> bool:
+    raw = extract_text_from_codex_output(output)
+    match = re.search(r"^\s*PROOF_OK:\s*(YES|NO)\s*$", raw, flags=re.MULTILINE)
+    if not match:
+        raise ValueError("Agent output missing PROOF_OK line.")
+    return match.group(1) == "YES"
+
+
+def run_update(update_script: Path, label: str, lean_root: Path) -> None:
+    cmd = [
+        "python",
+        str(update_script),
+        "update",
+        "--label",
+        label,
+        "--target",
+        "proof",
+        "--lean-root",
+        str(lean_root),
+    ]
+    subprocess.run(cmd, check=True)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run codex exec to formalize a proof and log the session."
@@ -182,6 +248,11 @@ def parse_args() -> argparse.Namespace:
         help="Command list to run Codex (default: codex exec --full-auto --json)",
     )
     parser.add_argument(
+        "--update-script",
+        default=str(DEFAULT_UPDATE_SCRIPT),
+        help="Path to registry update script",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print the prompt and exit without running codex",
@@ -195,6 +266,7 @@ def main() -> None:
     template_path = Path(args.template)
     lean_root = Path(args.lean_root)
     log_dir = Path(args.log_dir)
+    update_script = Path(args.update_script)
 
     prompt = build_prompt(args.label, registry_path, template_path, lean_root)
 
@@ -223,7 +295,17 @@ def main() -> None:
         write_log(log_path, log_content)
         raise RuntimeError(f"codex exec failed (code {result.returncode}); see log {log_path}")
 
+    try:
+        ok = parse_proof_ok(stdout)
+    except ValueError:
+        write_log(log_path, log_content)
+        raise
+
+    log_content += f"\n## Parsed Output\nPROOF_OK: {'YES' if ok else 'NO'}\n"
     write_log(log_path, log_content)
+
+    if ok:
+        run_update(update_script, args.label, lean_root)
 
 
 if __name__ == "__main__":

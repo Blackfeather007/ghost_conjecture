@@ -15,7 +15,11 @@ The LEAN version of the theorem (which has been checked to agree with the natura
 The LEAN declaration name is:
 {lean_decl_name}
 
-The proof of this theorem uses the following results, the statements and LEAN versions are listed below:
+The proof of this theorem uses the following results. You can take these lemmas as conditions (no need to prove them). The statements and LEAN versions are listed below:
 {list_of_latex_with_lean_file}
 
 You may use lean-lsp-mcp to interact with the LEAN environment. Please ensure that the files compiles with no warning after your modification.
+
+Final Output (exact format):
+PROOF_OK: YES|NO
+Do not add any other text after this line.
