@@ -16,7 +16,7 @@ You may use lean-lsp-mcp to interact with the LEAN environment.
 
 If you are formalizing a theorem or a lemma, the proof part could be `:= by sorry`
 
-Please ensure that the files compiles with no warning after your modification, except for the warning that comes from sorrys outside this file or the lemma or theorem you just formalized.
+You are required to strictly ensure that the files compiles with no warning after your modification, except for the warning that comes from sorrys outside this file or the lemma or theorem you just formalized. 
 
 The import format is like `import A.B.C`
 
