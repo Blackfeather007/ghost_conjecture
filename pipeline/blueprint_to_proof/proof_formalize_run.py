@@ -146,9 +146,42 @@ def run_codex(prompt: str, cmd: List[str], workspace_dir: Path) -> subprocess.Co
     )
 
 
-def write_log(path: Path, content: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
+def run_codex_stream(
+    prompt: str,
+    cmd: List[str],
+    workspace_dir: Path,
+    log_path: Path,
+    header: str,
+) -> tuple[int, str, str]:
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    stdout_parts: List[str] = []
+    with log_path.open("w", encoding="utf-8") as handle:
+        handle.write(header)
+        handle.write(prompt)
+        if not prompt.endswith("\n"):
+            handle.write("\n")
+        handle.write("\n## Codex stdout\n")
+        proc = subprocess.Popen(
+            list(cmd),
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=workspace_dir,
+        )
+        assert proc.stdin is not None
+        proc.stdin.write(prompt)
+        proc.stdin.close()
+        assert proc.stdout is not None
+        for line in proc.stdout:
+            stdout_parts.append(line)
+            handle.write(line)
+            handle.flush()
+        stderr = ""
+        if proc.stderr is not None:
+            stderr = proc.stderr.read()
+        code = proc.wait()
+    return code, "".join(stdout_parts), stderr
 
 
 def extract_text_from_json(payload: object) -> str:
@@ -258,6 +291,11 @@ def parse_args() -> argparse.Namespace:
         help="Directory to store formalization logs",
     )
     parser.add_argument(
+        "--log-path",
+        default=None,
+        help="Optional log file path (overrides --log-dir)",
+    )
+    parser.add_argument(
         "--codex-cmd",
         nargs="+",
         default=DEFAULT_CODEX_CMD,
@@ -282,6 +320,7 @@ def main() -> None:
     template_path = Path(args.template)
     lean_root = Path(args.lean_root)
     log_dir = Path(args.log_dir)
+    log_path_override = Path(args.log_path) if args.log_path else None
     update_script = Path(args.update_script)
 
     prompt = build_prompt(args.label, registry_path, template_path, lean_root)
@@ -292,35 +331,33 @@ def main() -> None:
 
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     log_name = f"{safe_filename(args.label)}_{timestamp}.log"
-    log_path = log_dir / log_name
+    log_path = log_path_override or (log_dir / log_name)
 
-    result = run_codex(prompt, args.codex_cmd, lean_root)
-
-    stdout = result.stdout or ""
-    stderr = result.stderr or ""
-    log_content = (
+    header = (
         f"# label: {args.label}\n"
         f"# timestamp: {timestamp}\n"
         f"# codex cmd: {args.codex_cmd}\n\n"
-        f"## Prompt\n{prompt}\n\n"
-        f"## Codex stdout\n{stdout}\n\n"
-        f"## Codex stderr\n{stderr}\n"
+        f"## Prompt\n"
     )
+    returncode, stdout, stderr = run_codex_stream(
+        prompt, args.codex_cmd, lean_root, log_path, header
+    )
+    log_content = f"\n\n## Codex stderr\n{stderr}\n"
+    with log_path.open("a", encoding="utf-8") as handle:
+        handle.write(log_content)
 
-    if result.returncode != 0:
-        write_log(log_path, log_content)
+    if returncode != 0:
         record_failure(registry_path, args.label)
-        raise RuntimeError(f"codex exec failed (code {result.returncode}); see log {log_path}")
+        raise RuntimeError(f"codex exec failed (code {returncode}); see log {log_path}")
 
     try:
         ok = parse_proof_ok(stdout)
     except ValueError:
-        write_log(log_path, log_content)
         record_failure(registry_path, args.label)
         raise
 
-    log_content += f"\n## Parsed Output\nPROOF_OK: {'YES' if ok else 'NO'}\n"
-    write_log(log_path, log_content)
+    with log_path.open("a", encoding="utf-8") as handle:
+        handle.write(f"\n## Parsed Output\nPROOF_OK: {'YES' if ok else 'NO'}\n")
 
     if ok:
         run_update(update_script, args.label, lean_root)

@@ -9,6 +9,7 @@ import itertools
 import subprocess
 import sys
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Dict, List, Set, Tuple
@@ -163,10 +164,119 @@ def run_tasks(
     return results
 
 
-def summarize_results(results: List[Tuple[str, int]]) -> Dict[str, List[str]]:
+def run_tasks_loop(
+    mode: str,
+    runner: Path,
+    lean_root: Path,
+    max_concurrency: int,
+    registry_path: Path,
+    max_count: int | None,
+    max_statement_failures: int,
+    max_proof_failures: int,
+) -> List[Tuple[str, int]]:
+    results: List[Tuple[str, int]] = []
+    running: Dict[str, subprocess.Popen[str]] = {}
+    started: Set[str] = set()
+    running_lock = threading.Lock()
+    stop_event = threading.Event()
+
+    def _status_reporter() -> None:
+        spinner = itertools.cycle(["-", "/", "|", "\\"])
+        while not stop_event.wait(0.25):
+            with running_lock:
+                running_labels = ", ".join(sorted(running.keys())) if running else "(none)"
+            sys.stdout.write(f"\r[status] {next(spinner)} Running: {running_labels}")
+            sys.stdout.flush()
+
+    def pick_candidates(nodes: dict, failure_threshold: int) -> List[str]:
+        if mode == "statement":
+            return [
+                label
+                for label in select_statement_candidates(nodes, max_statement_failures)
+                if int(nodes[label].get("statement_failures", 0)) <= failure_threshold
+            ]
+        return [
+            label
+            for label in select_independent_proof_candidates(nodes, max_proof_failures)
+            if int(nodes[label].get("proof_failures", 0)) <= failure_threshold
+        ]
+
+    reporter = threading.Thread(target=_status_reporter, daemon=True)
+    reporter.start()
+
+    max_failures = max_statement_failures if mode == "statement" else max_proof_failures
+    failure_threshold = 0
+
+    while failure_threshold <= max_failures:
+        # Reap finished
+        finished: List[str] = []
+        with running_lock:
+            running_items = list(running.items())
+        for label, proc in running_items:
+            code = proc.poll()
+            if code is not None:
+                results.append((label, code))
+                finished.append(label)
+                print(f"\nFinished {label} (exit {code})", flush=True)
+        if finished:
+            with running_lock:
+                for label in finished:
+                    running.pop(label, None)
+
+        # Load current registry and select new candidates
+        registry = load_registry(registry_path)
+        nodes = registry.get("nodes") if isinstance(registry, dict) else None
+        if not isinstance(nodes, dict):
+            break
+
+        candidates = [
+            c for c in pick_candidates(nodes, failure_threshold) if c not in started and c not in running
+        ]
+        if max_count is not None:
+            remaining = max(max_count - len(started), 0)
+            candidates = candidates[:remaining]
+
+        # Launch as many as possible
+        while candidates:
+            with running_lock:
+                if len(running) >= max_concurrency:
+                    break
+            label = candidates.pop(0)
+            print(f"Starting {label}...", flush=True)
+            cmd = ["python", str(runner), "--label", label, "--lean-root", str(lean_root)]
+            with running_lock:
+                running[label] = subprocess.Popen(cmd, text=True)
+            started.add(label)
+
+        with running_lock:
+            running_empty = not running
+        if running_empty:
+            remaining_candidates = [
+                c for c in pick_candidates(nodes, failure_threshold) if c not in started
+            ]
+            if max_count is not None:
+                remaining = max(max_count - len(started), 0)
+                remaining_candidates = remaining_candidates[:remaining]
+            if not remaining_candidates:
+                failure_threshold += 1
+                continue
+
+        time.sleep(0.5)
+
+    stop_event.set()
+    reporter.join(timeout=1)
+    sys.stdout.write("\r")
+    sys.stdout.flush()
+    print("", flush=True)
+    return results
+
+
+def summarize_results(results: List[Tuple[str, int]], nodes: dict, field: str) -> Dict[str, List[str]]:
     summary = {"success": [], "failed": []}
     for label, code in results:
-        if code == 0:
+        node = nodes.get(label, {}) if isinstance(nodes, dict) else {}
+        status = node.get("status", {}) if isinstance(node, dict) else {}
+        if status.get(field) == "formalized":
             summary["success"].append(label)
         else:
             summary["failed"].append(label)
@@ -281,28 +391,16 @@ def main() -> None:
     proof_results: List[Tuple[str, int]] = []
 
     if mode == "statement" and args.loop_statements and not args.dry_run:
-        loop_round = 1
-        while True:
-            registry = load_registry(Path(args.registry))
-            nodes = registry.get("nodes") if isinstance(registry, dict) else None
-            if not isinstance(nodes, dict):
-                break
-            statement_labels = select_statement_candidates(nodes, args.max_statement_failures)
-            if args.max_count is not None:
-                statement_labels = statement_labels[: args.max_count]
-            if not statement_labels:
-                break
-            print(f"\nStatement loop round {loop_round}", flush=True)
-            statement_results.extend(
-                run_tasks(
-                    statement_labels,
-                    Path(args.statement_runner),
-                    Path(args.lean_root),
-                    args.max_concurrency,
-                    args.dry_run,
-                )
-            )
-            loop_round += 1
+        statement_results = run_tasks_loop(
+            "statement",
+            Path(args.statement_runner),
+            Path(args.lean_root),
+            args.max_concurrency,
+            Path(args.registry),
+            args.max_count,
+            args.max_statement_failures,
+            args.max_proof_failures,
+        )
     else:
         statement_results = run_tasks(
             statement_labels,
@@ -313,28 +411,16 @@ def main() -> None:
         )
 
     if mode == "proof" and args.loop_proofs and not args.dry_run:
-        loop_round = 1
-        while True:
-            registry = load_registry(Path(args.registry))
-            nodes = registry.get("nodes") if isinstance(registry, dict) else None
-            if not isinstance(nodes, dict):
-                break
-            proof_labels = select_independent_proof_candidates(nodes, args.max_proof_failures)
-            if args.max_count is not None:
-                proof_labels = proof_labels[: args.max_count]
-            if not proof_labels:
-                break
-            print(f"\nProof loop round {loop_round}", flush=True)
-            proof_results.extend(
-                run_tasks(
-                    proof_labels,
-                    Path(args.proof_runner),
-                    Path(args.lean_root),
-                    args.max_concurrency,
-                    args.dry_run,
-                )
-            )
-            loop_round += 1
+        proof_results = run_tasks_loop(
+            "proof",
+            Path(args.proof_runner),
+            Path(args.lean_root),
+            args.max_concurrency,
+            Path(args.registry),
+            args.max_count,
+            args.max_statement_failures,
+            args.max_proof_failures,
+        )
     else:
         proof_results = run_tasks(
             proof_labels,
@@ -344,8 +430,13 @@ def main() -> None:
             args.dry_run,
         )
 
-    statement_summary = summarize_results(statement_results)
-    proof_summary = summarize_results(proof_results)
+    final_registry = load_registry(Path(args.registry))
+    final_nodes = final_registry.get("nodes") if isinstance(final_registry, dict) else {}
+    if not isinstance(final_nodes, dict):
+        final_nodes = {}
+
+    statement_summary = summarize_results(statement_results, final_nodes, "statement")
+    proof_summary = summarize_results(proof_results, final_nodes, "proof")
 
     print("\nStatement formalization results:")
     print("  success:", ", ".join(statement_summary["success"]) or "(none)")

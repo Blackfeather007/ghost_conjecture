@@ -92,8 +92,8 @@ python pipeline/blueprint_to_proof/coordinator.py \
 The coordinator runs **either** statements or proofs per invocation (statements take priority if any are available), lists the selected labels, then reports success/failed for that phase.
 Use `--mode statement` or `--mode proof` to force a phase, `--max-count` for a total cap, `--dry-run` to only print planned tasks, and `--max-proof-failures` to skip proofs that have failed too often.
 Use `--max-statement-failures` to skip statements that have failed too often.
-Use `--loop-proofs` (with `--mode proof`) to keep running proof batches until all remaining proofs exceed the failure threshold.
-Use `--loop-statements` (with `--mode statement`) to keep running statement batches until no more are eligible.
+Use `--loop-proofs` (with `--mode proof`) to keep running proofs continuously; it advances the failure threshold so every remaining proof is attempted once, then twice, etc., until all exceed the limit.
+Use `--loop-statements` (with `--mode statement`) to keep running statements continuously with the same “attempt every remaining statement once, then twice” behavior.
 
 ### Initialize or refresh the registry
 ```bash
