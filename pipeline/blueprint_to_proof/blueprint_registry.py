@@ -29,6 +29,7 @@ PROOF_REQUIRED_ENVS = {
 DEFAULT_STATUS = {"statement": "todo", "proof": "todo"}
 FORMALIZED_STATUS = "formalized"
 DEFAULT_PROOF_FAILURES = 0
+DEFAULT_STATEMENT_FAILURES = 0
 
 
 @dataclass
@@ -193,6 +194,7 @@ def parse_blueprint_file(path: Path) -> List[Dict[str, object]]:
                 "lean": {"file": None, "name": None},
                 "has_proof": proof_block is not None,
                 "proof_failures": DEFAULT_PROOF_FAILURES,
+                "statement_failures": DEFAULT_STATEMENT_FAILURES,
                 "source": {
                     "file": str(path),
                     "line": block.start_line,
@@ -225,6 +227,7 @@ def merge_nodes(
         merged_node = dict(node)
         merged_node["status"] = prior.get("status", DEFAULT_STATUS)
         merged_node["proof_failures"] = prior.get("proof_failures", DEFAULT_PROOF_FAILURES)
+        merged_node["statement_failures"] = prior.get("statement_failures", DEFAULT_STATEMENT_FAILURES)
         prior_lean = prior.get("lean") if isinstance(prior, dict) else None
         if prior_lean and merged_node.get("lean") == {"file": None, "name": None}:
             merged_node["lean"] = prior_lean

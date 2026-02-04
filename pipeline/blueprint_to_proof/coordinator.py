@@ -49,10 +49,15 @@ def proof_dependencies_formalized(nodes: dict, label: str) -> bool:
     return True
 
 
-def select_statement_candidates(nodes: dict) -> List[str]:
+def select_statement_candidates(nodes: dict, max_statement_failures: int) -> List[str]:
     labels: List[str] = []
     for label, node in nodes.items():
         if is_formalized(node, "statement"):
+            continue
+        failures = 0
+        if isinstance(node, dict):
+            failures = int(node.get("statement_failures", 0))
+        if failures > max_statement_failures:
             continue
         if statement_dependencies_formalized(nodes, label):
             labels.append(label)
@@ -215,9 +220,20 @@ def parse_args() -> argparse.Namespace:
         help="Skip proofs with failures greater than this count",
     )
     parser.add_argument(
+        "--max-statement-failures",
+        type=int,
+        default=0,
+        help="Skip statements with failures greater than this count",
+    )
+    parser.add_argument(
         "--loop-proofs",
         action="store_true",
         help="Repeat proof runs until all remaining proofs exceed max failures",
+    )
+    parser.add_argument(
+        "--loop-statements",
+        action="store_true",
+        help="Repeat statement runs until no more statements are eligible",
     )
     parser.add_argument(
         "--dry-run",
@@ -234,7 +250,7 @@ def main() -> None:
     if not isinstance(nodes, dict):
         raise ValueError("Invalid registry format: missing nodes")
 
-    statement_labels = select_statement_candidates(nodes)
+    statement_labels = select_statement_candidates(nodes, args.max_statement_failures)
     proof_labels = select_independent_proof_candidates(nodes, args.max_proof_failures)
 
     if args.mode == "auto":
@@ -264,13 +280,37 @@ def main() -> None:
     statement_results: List[Tuple[str, int]] = []
     proof_results: List[Tuple[str, int]] = []
 
-    statement_results = run_tasks(
-        statement_labels,
-        Path(args.statement_runner),
-        Path(args.lean_root),
-        args.max_concurrency,
-        args.dry_run,
-    )
+    if mode == "statement" and args.loop_statements and not args.dry_run:
+        loop_round = 1
+        while True:
+            registry = load_registry(Path(args.registry))
+            nodes = registry.get("nodes") if isinstance(registry, dict) else None
+            if not isinstance(nodes, dict):
+                break
+            statement_labels = select_statement_candidates(nodes, args.max_statement_failures)
+            if args.max_count is not None:
+                statement_labels = statement_labels[: args.max_count]
+            if not statement_labels:
+                break
+            print(f"\nStatement loop round {loop_round}", flush=True)
+            statement_results.extend(
+                run_tasks(
+                    statement_labels,
+                    Path(args.statement_runner),
+                    Path(args.lean_root),
+                    args.max_concurrency,
+                    args.dry_run,
+                )
+            )
+            loop_round += 1
+    else:
+        statement_results = run_tasks(
+            statement_labels,
+            Path(args.statement_runner),
+            Path(args.lean_root),
+            args.max_concurrency,
+            args.dry_run,
+        )
 
     if mode == "proof" and args.loop_proofs and not args.dry_run:
         loop_round = 1

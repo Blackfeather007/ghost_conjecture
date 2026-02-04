@@ -44,6 +44,7 @@ Each `node` contains:
 - `lean`: `{ file: <relative path or null>, name: <fq name or null> }`
 - `status`: `{ statement: "todo"|"formalized", proof: "todo" }`
 - `proof_failures`: count of failed proof attempts
+- `statement_failures`: count of failed statement attempts
 - `has_proof`
 - `source`: `{ file: <tex path>, line: <line number> }`
 
@@ -90,7 +91,9 @@ python pipeline/blueprint_to_proof/coordinator.py \
 
 The coordinator runs **either** statements or proofs per invocation (statements take priority if any are available), lists the selected labels, then reports success/failed for that phase.
 Use `--mode statement` or `--mode proof` to force a phase, `--max-count` for a total cap, `--dry-run` to only print planned tasks, and `--max-proof-failures` to skip proofs that have failed too often.
+Use `--max-statement-failures` to skip statements that have failed too often.
 Use `--loop-proofs` (with `--mode proof`) to keep running proof batches until all remaining proofs exceed the failure threshold.
+Use `--loop-statements` (with `--mode statement`) to keep running statement batches until no more are eligible.
 
 ### Initialize or refresh the registry
 ```bash

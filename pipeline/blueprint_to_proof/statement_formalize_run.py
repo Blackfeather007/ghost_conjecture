@@ -200,6 +200,22 @@ def run_update(
     subprocess.run(cmd, check=True)
 
 
+def record_failure(registry_path: Path, label: str) -> None:
+    registry = load_registry(registry_path)
+    nodes = registry.get("nodes")
+    if not isinstance(nodes, dict) or label not in nodes:
+        return
+    node = nodes[label]
+    failures = 0
+    if isinstance(node, dict):
+        failures = int(node.get("statement_failures", 0))
+        node["statement_failures"] = failures + 1
+        nodes[label] = node
+        registry["nodes"] = nodes
+        Path(registry_path).write_text(
+            json.dumps(registry, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run codex exec to formalize a statement and update the registry."
@@ -276,12 +292,14 @@ def main() -> None:
     )
     if result.returncode != 0:
         write_log(log_path, log_content)
+        record_failure(registry_path, args.label)
         raise RuntimeError(f"codex exec failed (code {result.returncode}); see log {log_path}")
 
     try:
         lean_file, lean_name = parse_agent_output(stdout)
     except ValueError:
         write_log(log_path, log_content)
+        record_failure(registry_path, args.label)
         raise
 
     log_content += f"\n## Parsed Output\nLEAN_FILE: {lean_file}\nLEAN_NAME: {lean_name}\n"
