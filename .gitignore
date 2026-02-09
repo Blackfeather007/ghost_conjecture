@@ -4,6 +4,10 @@
 ## OS junk
 .DS_Store
 
+## Python bytecode
+__pycache__/
+*.py[cod]
+
 ## leanblueprint (compiled/generated artifacts)
 /GhostConjectureLean/blueprint/lean_decls
 /GhostConjectureLean/blueprint/print/
